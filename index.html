@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍇 샤인 주차별 전문가</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 12px;
+      padding: 10px;
+      line-height: 1.4;
+    }
+    
+    /* Weather Panel */
+    .weather-panel {
+      margin-bottom: 8px;
+      padding: 10px;
+      background: linear-gradient(135deg, #1e3a5f, #1e293b);
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+    .weather-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .weather-header .title { font-size: 12px; color: #e2e8f0; font-weight: 600; }
+    .weather-header .location {
+      margin-left: auto;
+    }
+    .weather-header select {
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 3px;
+      color: #e2e8f0;
+      font-size: 10px;
+      padding: 3px 6px;
+    }
+    .weather-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .weather-day {
+      flex: 1;
+      min-width: 280px;
+      background: rgba(59,130,246,0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .weather-day .day-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(59,130,246,0.2);
+    }
+    .weather-day .day-label { font-size: 11px; font-weight: 600; color: #e2e8f0; }
+    .weather-day .day-icon { font-size: 22px; }
+    .weather-day .day-temp { font-size: 14px; font-weight: 700; color: #60a5fa; }
+    .weather-day .day-desc { font-size: 10px; color: #94a3b8; margin-left: auto; }
+    .weather-day .day-precip { font-size: 9px; color: #38bdf8; }
+    
+    /* Hourly inside day */
+    .hourly-scroll {
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+    .hourly-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 30px;
+      padding: 3px 2px;
+      background: rgba(71,85,105,0.4);
+      border-radius: 4px;
+    }
+    .hourly-item .time { font-size: 9px; color: #94a3b8; }
+    .hourly-item .icon { font-size: 14px; margin: 2px 0; }
+    .hourly-item .t { font-size: 11px; font-weight: 700; }
+    .hourly-item .rain { font-size: 8px; color: #38bdf8; }
+    .hourly-item .snow { font-size: 8px; color: #a5b4fc; }
+    .hourly-item.now { background: rgba(34,197,94,0.3); border: 1px solid rgba(34,197,94,0.5); }
+    
+    .weather-loading { font-size: 10px; color: #64748b; padding: 20px; text-align: center; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 8px;
+    }
+    .header h1 { font-size: 14px; flex: 1; }
+    .header input {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 5px 8px;
+      color: white;
+      font-size: 11px;
+      width: 110px;
+    }
+    .header input::placeholder { color: rgba(255,255,255,0.6); }
+    .header .stat {
+      background: rgba(0,0,0,0.2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .header .stat b { color: #fcd34d; }
+    
+    /* Week List */
+    .week-list { display: flex; flex-direction: column; gap: 2px; }
+    
+    /* Week Item */
+    .week-item {
+      background: #1e293b;
+      border-radius: 4px;
+      overflow: hidden;
+      border-left: 3px solid #475569;
+    }
+    .week-item.active { border-left-color: #a855f7; }
+    .week-item.current { border-left-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
+    
+    /* Week Header (Toggle) */
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .week-header:hover { background: #334155; }
+    .week-icon { font-size: 14px; width: 20px; text-align: center; }
+    .week-info { flex: 1; display: flex; align-items: baseline; gap: 6px; }
+    .week-title { font-weight: 600; font-size: 11px; }
+    .week-dates { font-size: 9px; color: #fde047; font-weight: 700; }
+    .week-alert {
+      font-size: 8px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(239,68,68,0.15);
+      color: #fca5a5;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .week-toggle {
+      font-size: 10px;
+      color: #64748b;
+      transition: transform 0.3s;
+    }
+    .week-item.open .week-toggle { transform: rotate(180deg); }
+    
+    /* Week Content */
+    .week-content {
+      display: none;
+      padding: 0 12px 12px;
+    }
+    .week-item.open .week-content { display: block; }
+    
+    /* Grid inside content */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+    
+    /* Card */
+    .card {
+      background: #334155;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    .card-title {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* Row */
+    .row {
+      background: #475569;
+      border-radius: 3px;
+      padding: 4px 6px;
+      margin-bottom: 3px;
+      font-size: 10px;
+    }
+    .row:last-child { margin-bottom: 0; }
+    .row-label { font-size: 8px; color: #94a3b8; }
+    .row-value { font-weight: 600; color: #f1f5f9; }
+    .row-sub { font-size: 9px; color: #cbd5e1; }
+    .row-ok { font-size: 8px; color: #4ade80; }
+    .row-warn { font-size: 8px; color: #fbbf24; }
+    
+    .row.water { border-left: 2px solid #22d3ee; }
+    .row.fert { border-left: 2px solid #4ade80; }
+    .row.temp { border-left: 2px solid #fb923c; }
+    .row.humid { border-left: 2px solid #3b82f6; }
+    .row.vent { border-left: 2px solid #facc15; }
+    .row.pest { border-left: 2px solid #f87171; }
+    .row.pf { border-left: 2px solid #f472b6; }
+    
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 6px;
+      font-size: 8px;
+      font-weight: 600;
+    }
+    .badge.h { background: rgba(239,68,68,0.2); color: #f87171; }
+    .badge.m { background: rgba(250,204,21,0.2); color: #fbbf24; }
+    .badge.l { background: rgba(74,222,128,0.2); color: #4ade80; }
+    .badge.pf { background: rgba(244,114,182,0.2); color: #f472b6; }
+    .badge.current { background: #22c55e; color: white; }
+    
+    /* Task List */
+    .task-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .task {
+      background: #475569;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .task input[type="checkbox"] {
+      width: 12px;
+      height: 12px;
+      accent-color: #a855f7;
+      cursor: pointer;
+      margin: 0;
+    }
+    .task.checked span { opacity: 0.5; text-decoration: line-through; }
+    
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>🍇 샤인 주차별 전문가</h1>
+    <input type="date" id="heatStart" value="2025-01-19" title="열가둠 시작일">
+    <input type="date" id="targetDate" title="분석일">
+    <div class="stat">주차 <b id="dWeek">-</b></div>
+    <div class="stat">경과 <b id="dDays">-</b></div>
+  </div>
+  
+  <!-- Weather Panel -->
+  <div class="weather-panel">
+    <div class="weather-header">
+      <span class="title">🌤️ 오늘·내일 날씨</span>
+      <div class="location">
+        <select id="weatherLocation" onchange="loadWeather()">
+          <option value="Gimcheon">김천</option>
+          <option value="Sangju">상주</option>
+          <option value="Yeongcheon">영천</option>
+          <option value="Gyeongsan">경산</option>
+          <option value="Daegu">대구</option>
+        </select>
+      </div>
+    </div>
+    <div id="weatherContent"><div class="weather-loading">날씨 로딩중...</div></div>
+  </div>
+  
+  
+  <!-- Week List -->
+  <div class="week-list" id="weekList"></div>
+  
+  <script src="shine_expert.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+    let currentWeekNo = 1;
+    
+    function init() {
+      const t = new Date();
+      $('targetDate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+      
+      ['heatStart', 'targetDate'].forEach(id => {
+        $(id).addEventListener('change', run);
+        $(id).addEventListener('input', run);
+      });
+      
+      renderWeekList();
+      run();
+      setTimeout(loadTaskStates, 100);
+    }
+    
+    function run() {
+      const { analyze, getWeekNo } = window.ShineExpert;
+      const heatStart = new Date($('heatStart').value);
+      const targetDate = new Date($('targetDate').value);
+      
+      const rawWeekNo = getWeekNo(heatStart, targetDate);
+      const daysFromStart = Math.floor((targetDate - heatStart) / (24 * 60 * 60 * 1000));
+      
+      // 시즌 범위 체크 (1~52주 = 연간 사이클)
+      if (rawWeekNo <= 0) {
+        currentWeekNo = 0;
+        $('dWeek').textContent = '시즌 전';
+        $('dDays').textContent = 'D' + daysFromStart;
+      } else if (rawWeekNo > 52) {
+        // 52주 초과 시 다음 연도로 순환 (rawWeekNo % 52 또는 그냥 52주 표시)
+        currentWeekNo = ((rawWeekNo - 1) % 52) + 1;
+        $('dWeek').textContent = currentWeekNo + '주';
+        $('dDays').textContent = 'D+' + daysFromStart;
+      } else {
+        currentWeekNo = rawWeekNo;
+        $('dWeek').textContent = rawWeekNo + '주';
+        $('dDays').textContent = 'D+' + daysFromStart;
+      }
+      
+      updateWeekHighlight(currentWeekNo);
+    }
+    
+    function updateWeekHighlight(weekNo) {
+      document.querySelectorAll('.week-item').forEach((el, i) => {
+        el.classList.remove('current');
+        if (i + 1 === weekNo) {
+          el.classList.add('current');
+        }
+      });
+    }
+    
+    function renderWeekList() {
+      const { WEEKLY_DATA } = window.ShineExpert;
+      const container = $('weekList');
+      container.innerHTML = '';
+      
+      for (let i = 1; i <= 52; i++) {
+        const w = WEEKLY_DATA[i];
+        if (!w) continue;
+        
+        const item = document.createElement('div');
+        item.className = 'week-item';
+        item.innerHTML = `
+          <div class="week-header" onclick="toggleWeek(${i})">
+            <div class="week-icon">${w.phaseEmoji}</div>
+            <div class="week-info">
+              <div class="week-title">${i}주차 - ${w.phase}</div>
+              <div class="week-dates">${w.dateRange}</div>
+            </div>
+            <div class="week-alert">${w.keyAlert}</div>
+            <div class="week-toggle">▼</div>
+          </div>
+          <div class="week-content" id="weekContent${i}">
+            ${renderWeekContent(w)}
+          </div>
+        `;
+        container.appendChild(item);
+      }
+    }
+    
+    function renderWeekContent(w) {
+      const rb = w.pest.risk === 'HIGH' ? 'h' : w.pest.risk === 'MEDIUM' ? 'm' : 'l';
+      
+      return `
+        <div style="margin-bottom:8px;padding:6px;background:#1e293b;border-radius:4px;font-size:11px;">
+          <strong>🎯 목표:</strong> ${w.goal}
+        </div>
+        
+        <div class="content-grid">
+          <!-- 관수 -->
+          <div class="card">
+            <div class="card-title">💧 관수</div>
+            <div class="row water"><div class="row-label">주기</div><div class="row-value">${w.water.interval}</div></div>
+            <div class="row water"><div class="row-label">용량</div><div class="row-value">${w.water.amountTon}</div><div class="row-sub">${w.water.amountL}</div></div>
+            <div class="row water"><div class="row-label">방법</div><div class="row-sub">${w.water.method}</div></div>
+            <div class="row water"><div class="row-ok">✓ ${w.water.point}</div></div>
+            <div class="row water"><div class="row-warn">⚠ ${w.water.caution}</div></div>
+          </div>
+          
+          <!-- 시비 -->
+          <div class="card">
+            <div class="card-title">🧪 시비</div>
+            <div class="row fert"><div class="row-label">${w.fertilizer.type}</div><div class="row-value">${w.fertilizer.main}</div></div>
+            ${w.fertilizer.sub ? `<div class="row fert"><div class="row-sub">${w.fertilizer.sub}</div></div>` : ''}
+            ${w.fertilizer.foliar ? `<div class="row fert"><div class="row-label">엽면</div><div class="row-sub">${w.fertilizer.foliar}</div></div>` : ''}
+            <div class="row fert"><div class="row-label">EC</div><div class="row-value">${w.fertilizer.ec}</div></div>
+            <div class="row fert"><div class="row-ok">✓ ${w.fertilizer.npk}</div></div>
+            <div class="row fert"><div class="row-warn">⚠ ${w.fertilizer.point}</div></div>
+          </div>
+          
+          <!-- PF농법 -->
+          <div class="card">
+            <div class="card-title">🦠 PF농법 (비)</div>
+            ${w.pf.apply ? `
+              <div class="row pf"><span class="badge pf">${w.pf.note}</span></div>
+              <div class="row pf"><div class="row-label">용량</div><div class="row-value">${w.pf.amount}</div></div>
+              <div class="row pf"><div class="row-sub">${w.pf.timing || ''}</div></div>
+            ` : `<div class="row"><div class="row-value">${w.pf.note}</div></div>`}
+          </div>
+          
+          <!-- 멀칭 -->
+          ${w.mulching ? `
+          <div class="card">
+            <div class="card-title">🛏️ 멀칭</div>
+            <div class="row" style="border-left:2px solid #8b5cf6;"><div class="row-label">상태</div><div class="row-value" style="color:#a78bfa">${w.mulching.status}</div></div>
+            <div class="row" style="border-left:2px solid #8b5cf6;"><div class="row-label">작업</div><div class="row-sub">${w.mulching.action}</div></div>
+            <div class="row" style="border-left:2px solid #8b5cf6;"><div class="row-ok">✓ ${w.mulching.point}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 전정 -->
+          ${w.pruning ? `
+          <div class="card">
+            <div class="card-title">✂️ 전정</div>
+            <div class="row" style="border-left:2px solid #f472b6;"><div class="row-label">상태</div><div class="row-value" style="color:#f472b6">${w.pruning.status}</div></div>
+            <div class="row" style="border-left:2px solid #f472b6;"><div class="row-label">작업</div><div class="row-sub">${w.pruning.action}</div></div>
+            <div class="row" style="border-left:2px solid #f472b6;"><div class="row-ok">✓ ${w.pruning.point}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 화수정형 -->
+          ${w.hwasoo ? `
+          <div class="card">
+            <div class="card-title">✂️ 화수정형</div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-label">단계</div><div class="row-value" style="color:#f472b6">${w.hwasoo.stage}</div></div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-label">시기</div><div class="row-sub">${w.hwasoo.timing}</div></div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-label">목표</div><div class="row-value">${w.hwasoo.target}</div></div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-label">방법</div><div class="row-sub">${w.hwasoo.method}</div></div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-ok">✓ ${w.hwasoo.point}</div></div>
+            <div class="row" style="border-left:2px solid #ec4899;"><div class="row-warn">${w.hwasoo.caution}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 메리트청 -->
+          ${w.meritcheong ? `
+          <div class="card">
+            <div class="card-title">🧴 메리트청 (비)</div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">단계</div><div class="row-value" style="color:#fbbf24">${w.meritcheong.stage}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">시기</div><div class="row-value">${w.meritcheong.timing}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">농도</div><div class="row-sub">${w.meritcheong.concentration}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">방법</div><div class="row-sub">${w.meritcheong.method}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-ok">✓ ${w.meritcheong.point}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-warn">${w.meritcheong.caution}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 지베렐린(GA) -->
+          ${w.ga ? `
+          <div class="card">
+            <div class="card-title">💉 지베렐린(GA)</div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-label">단계</div><div class="row-value" style="color:#34d399">${w.ga.stage}</div></div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-label">시기</div><div class="row-value">${w.ga.timing}</div></div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-label">농도</div><div class="row-sub">${w.ga.concentration}</div></div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-label">방법</div><div class="row-sub">${w.ga.method}</div></div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-ok">✓ ${w.ga.point}</div></div>
+            <div class="row" style="border-left:2px solid #10b981;"><div class="row-warn">${w.ga.caution}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 토양점검 -->
+          ${w.soilCheck ? `
+          <div class="card">
+            <div class="card-title">🔬 토양점검</div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-label">단계</div><div class="row-value" style="color:#818cf8">${w.soilCheck.stage}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-label">시기</div><div class="row-sub">${w.soilCheck.timing}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-label">항목</div><div class="row-sub">${w.soilCheck.items}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-label">적정값</div><div class="row-value" style="font-size:9px">${w.soilCheck.target}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-label">방법</div><div class="row-sub">${w.soilCheck.method}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-ok">✓ ${w.soilCheck.point}</div></div>
+            <div class="row" style="border-left:2px solid #6366f1;"><div class="row-warn">${w.soilCheck.caution}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 당도 올리기 비법 -->
+          ${w.brix ? `
+          <div class="card" style="grid-column: span 2;">
+            <div class="card-title">🍯 당도 올리기 비법 (비)</div>
+            <div class="row" style="border-left:2px solid #f59e0b;background:#451a03;"><div class="row-label">단계</div><div class="row-value" style="color:#fcd34d">${w.brix.stage}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">목표</div><div class="row-value" style="color:#fbbf24">${w.brix.target}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;">
+              <div class="row-label">🔑 비법</div>
+              <div style="font-size:9px;color:#fcd34d;">
+                ${w.brix.secrets.map(s => `<div style="margin:2px 0;">${s}</div>`).join('')}
+              </div>
+            </div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-label">방법</div><div class="row-sub">${w.brix.method}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-ok">✓ ${w.brix.point}</div></div>
+            <div class="row" style="border-left:2px solid #f59e0b;"><div class="row-warn">${w.brix.caution}</div></div>
+          </div>
+          ` : ''}
+          
+          <!-- 온도 -->
+          <div class="card">
+            <div class="card-title">🌡️ 온도</div>
+            ${w.avgOutdoorTemp ? `<div class="row" style="background:#1e3a5f;border-left:2px solid #3b82f6;"><div class="row-label">🌤️ 외부 통상</div><div class="row-value" style="color:#60a5fa">${w.avgOutdoorTemp.min}~${w.avgOutdoorTemp.max}°C <span style="font-size:9px;color:#94a3b8">(평균 ${w.avgOutdoorTemp.avg}°C)</span></div></div>` : ''}
+            <div class="row temp"><div class="row-label">주간 목표</div><div class="row-value">${w.temperature.dayTarget[0]}~${w.temperature.dayTarget[1]}°C</div></div>
+            <div class="row temp"><div class="row-label">야간 목표</div><div class="row-value">${w.temperature.nightTarget[0]}~${w.temperature.nightTarget[1]}°C</div></div>
+            <div class="row temp"><div class="row-label">지온 목표</div><div class="row-value">${w.temperature.soilTarget[0]}~${w.temperature.soilTarget[1]}°C</div></div>
+            <div class="row temp"><div class="row-ok">✓ ${w.temperature.point}</div></div>
+            <div class="row temp"><div class="row-warn">⚠ ${w.temperature.caution}</div></div>
+          </div>
+          
+          <!-- 습도 -->
+          <div class="card">
+            <div class="card-title">💨 습도</div>
+            <div class="row humid"><div class="row-label">주간</div><div class="row-value">${w.humidity.dayTarget[0]}~${w.humidity.dayTarget[1]}%</div></div>
+            <div class="row humid"><div class="row-label">야간</div><div class="row-value">${w.humidity.nightTarget[0]}~${w.humidity.nightTarget[1]}%</div></div>
+            <div class="row humid"><div class="row-label">VPD</div><div class="row-value">${w.humidity.vpdTarget[0]}~${w.humidity.vpdTarget[1]} kPa</div></div>
+            <div class="row humid"><div class="row-ok">✓ ${w.humidity.point}</div></div>
+            <div class="row humid"><div class="row-warn">⚠ ${w.humidity.caution}</div></div>
+          </div>
+          
+          <!-- 환기 -->
+          <div class="card">
+            <div class="card-title">🌬️ 환기</div>
+            <div class="row vent"><div class="row-label">시간대</div><div class="row-value">${w.ventilation.timing}</div></div>
+            <div class="row vent"><div class="row-label">시간</div><div class="row-value">${w.ventilation.duration}</div></div>
+            <div class="row vent"><div class="row-label">방법</div><div class="row-sub">${w.ventilation.method}</div></div>
+            <div class="row vent"><div class="row-ok">✓ ${w.ventilation.point}</div></div>
+            <div class="row vent"><div class="row-warn">⚠ ${w.ventilation.caution}</div></div>
+          </div>
+          
+          <!-- 병해 -->
+          <div class="card">
+            <div class="card-title">🛡️ 병해충</div>
+            <div class="row pest"><div class="row-label">주의</div><div class="row-value">${w.pest.watch.join(', ')}</div><span class="badge ${rb}">${w.pest.risk}</span></div>
+            <div class="row pest"><div class="row-label">조건</div><div class="row-sub">${w.pest.condition}</div></div>
+            <div class="row pest"><div class="row-label">예방</div><div class="row-sub">${w.pest.prevention}</div></div>
+            <div class="row pest"><div class="row-label">약제</div><div class="row-sub">💊 ${w.pest.spray}</div></div>
+          </div>
+          
+          <!-- 작업 -->
+          <div class="card">
+            <div class="card-title">📋 이번 주 작업</div>
+            <div class="task-list">
+              ${w.tasks.map((t, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="task_\${weekNum}_${i}"><span>${t}</span></div>`).join('')}
+            </div>
+          </div>
+          
+          <!-- 체크 -->
+          <div class="card">
+            <div class="card-title">✅ 체크포인트</div>
+            <div class="task-list">
+              ${w.checkPoints.map((c, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="check_\${weekNum}_${i}"><span>${c}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function toggleTask(el) {
+      const checkbox = el.querySelector('input[type="checkbox"]');
+      checkbox.checked = !checkbox.checked;
+      el.classList.toggle('checked', checkbox.checked);
+      // 로컬스토리지에 저장
+      const id = checkbox.id;
+      const checked = JSON.parse(localStorage.getItem('shineTasks') || '{}');
+      checked[id] = checkbox.checked;
+      localStorage.setItem('shineTasks', JSON.stringify(checked));
+    }
+    
+    function loadTaskStates() {
+      const checked = JSON.parse(localStorage.getItem('shineTasks') || '{}');
+      Object.keys(checked).forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox && checked[id]) {
+          checkbox.checked = true;
+          checkbox.closest('.task').classList.add('checked');
+        }
+      });
+    }
+    
+    function toggleWeek(weekNo) {
+      const items = document.querySelectorAll('.week-item');
+      items.forEach((item, i) => {
+        if (i + 1 === weekNo) {
+          item.classList.toggle('open');
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+    
+    // 현재 주차 자동 열기
+    function openCurrentWeek() {
+      const items = document.querySelectorAll('.week-item');
+      if (currentWeekNo >= 1 && currentWeekNo <= 52) {
+        items[currentWeekNo - 1]?.classList.add('open', 'current');
+      }
+    }
+    
+    // 날씨 아이콘 매핑
+    function getWeatherIcon(code) {
+      const icons = {
+        '113': '☀️', '116': '⛅', '119': '☁️', '122': '☁️',
+        '143': '🌫️', '176': '🌦️', '179': '🌨️', '182': '🌧️',
+        '185': '🌧️', '200': '⛈️', '227': '🌨️', '230': '❄️',
+        '248': '🌫️', '260': '🌫️', '263': '🌦️', '266': '🌧️',
+        '281': '🌧️', '284': '🌧️', '293': '🌦️', '296': '🌧️',
+        '299': '🌧️', '302': '🌧️', '305': '🌧️', '308': '🌧️',
+        '311': '🌧️', '314': '🌧️', '317': '🌨️', '320': '🌨️',
+        '323': '🌨️', '326': '🌨️', '329': '❄️', '332': '❄️',
+        '335': '❄️', '338': '❄️', '350': '🌧️', '353': '🌦️',
+        '356': '🌧️', '359': '🌧️', '362': '🌨️', '365': '🌨️',
+        '368': '🌨️', '371': '❄️', '374': '🌨️', '377': '🌨️',
+        '386': '⛈️', '389': '⛈️', '392': '⛈️', '395': '❄️'
+      };
+      return icons[code] || '🌤️';
+    }
+    
+    // 날씨 로드
+    async function loadWeather() {
+      const location = document.getElementById('weatherLocation').value;
+      const container = document.getElementById('weatherContent');
+      
+      try {
+        container.innerHTML = '<div class="weather-loading">날씨 로딩중...</div>';
+        
+        const response = await fetch(`https://wttr.in/${location}?format=j1`);
+        if (!response.ok) throw new Error('날씨 정보를 가져올 수 없습니다');
+        
+        const data = await response.json();
+        const today = data.weather[0];
+        const tomorrow = data.weather[1];
+        const current = data.current_condition[0];
+        const currentHour = new Date().getHours();
+        
+        const todayIcon = getWeatherIcon(current.weatherCode);
+        const tomorrowIcon = getWeatherIcon(tomorrow.hourly[4].weatherCode);
+        
+        // 온도별 색상 (추울수록 적색, 더울수록 파란색)
+        const getTempColor = (temp) => {
+          const t = parseInt(temp);
+          if (t <= -10) return '#ef4444'; // 매우 추움 - 빨강
+          if (t <= -5) return '#f97316';  // 많이 추움 - 주황빨강
+          if (t <= 0) return '#fb923c';   // 추움 - 주황
+          if (t <= 5) return '#fbbf24';   // 쌀쌀 - 노랑
+          if (t <= 10) return '#facc15';  // 선선 - 밝은노랑
+          if (t <= 15) return '#a3e635';  // 적당 - 연두
+          if (t <= 20) return '#4ade80';  // 따뜻 - 초록
+          if (t <= 25) return '#22d3ee';  // 온화 - 하늘
+          if (t <= 30) return '#38bdf8';  // 더움 - 파랑
+          if (t <= 35) return '#3b82f6';  // 많이 더움 - 진파랑
+          return '#6366f1';               // 매우 더움 - 보라파랑
+        };
+        
+        // 3시간 데이터를 2시간 단위로 보간
+        const interpolateHourly = (hourlyData) => {
+          const result = [];
+          for (let hour = 0; hour <= 22; hour += 2) {
+            // 해당 시간에 가장 가까운 3시간 데이터 찾기
+            const idx = Math.min(Math.floor(hour / 3), hourlyData.length - 1);
+            const nextIdx = Math.min(idx + 1, hourlyData.length - 1);
+            const h = hourlyData[idx];
+            const hNext = hourlyData[nextIdx];
+            
+            // 선형 보간 계수
+            const hourInSlot = hour % 3;
+            const ratio = hourInSlot / 3;
+            
+            // 온도 보간
+            const temp = Math.round(parseFloat(h.tempC) * (1 - ratio) + parseFloat(hNext.tempC) * ratio);
+            // 강수 확률은 높은 값 사용
+            const rain = Math.max(parseInt(h.chanceofrain), parseInt(hNext.chanceofrain) * ratio);
+            const snow = Math.max(parseInt(h.chanceofsnow), parseInt(hNext.chanceofsnow) * ratio);
+            
+            result.push({
+              hour,
+              temp,
+              rain: Math.round(rain),
+              snow: Math.round(snow),
+              weatherCode: h.weatherCode,
+              icon: getWeatherIcon(h.weatherCode)
+            });
+          }
+          return result;
+        };
+        
+        // 시간별 데이터 렌더링 (2시간 단위)
+        const renderHourly = (hourlyData, dayLabel, isToday = false) => {
+          const interpolated = interpolateHourly(hourlyData);
+          
+          return interpolated.map(h => {
+            const isNow = isToday && currentHour >= h.hour && currentHour < h.hour + 2;
+            const tempColor = getTempColor(h.temp);
+            
+            return `
+              <div class="hourly-item ${isNow ? 'now' : ''}">
+                <span class="time">${h.hour}시</span>
+                <span class="icon">${h.icon}</span>
+                <span class="t" style="color:${tempColor};text-shadow:0 0 4px ${tempColor}40;">${h.temp}°</span>
+                ${h.rain > 20 ? `<span class="rain">💧${h.rain}%</span>` : ''}
+                ${h.snow > 20 ? `<span class="snow">❄️${h.snow}%</span>` : ''}
+              </div>
+            `;
+          }).join('');
+        };
+        
+        // 오늘 최대 강수/적설 확률
+        const todayMaxRain = Math.max(...today.hourly.map(h => parseInt(h.chanceofrain)));
+        const todayMaxSnow = Math.max(...today.hourly.map(h => parseInt(h.chanceofsnow)));
+        const tomorrowMaxRain = Math.max(...tomorrow.hourly.map(h => parseInt(h.chanceofrain)));
+        const tomorrowMaxSnow = Math.max(...tomorrow.hourly.map(h => parseInt(h.chanceofsnow)));
+        
+        container.innerHTML = `
+          <div class="weather-grid">
+            <!-- 오늘 -->
+            <div class="weather-day">
+              <div class="day-header">
+                <span class="day-label">오늘 (${today.date.slice(5)})</span>
+                <span class="day-icon">${todayIcon}</span>
+                <span class="day-temp">${today.mintempC}° ~ ${today.maxtempC}°C</span>
+                <span class="day-desc">${current.lang_ko?.[0]?.value || current.weatherDesc[0].value}</span>
+                <span class="day-precip">
+                  ${todayMaxRain > 20 ? `💧${todayMaxRain}%` : ''}
+                  ${todayMaxSnow > 20 ? `❄️${todayMaxSnow}%` : ''}
+                </span>
+              </div>
+              <div class="hourly-scroll">${renderHourly(today.hourly, '오늘', true)}</div>
+            </div>
+            
+            <!-- 내일 -->
+            <div class="weather-day">
+              <div class="day-header">
+                <span class="day-label">내일 (${tomorrow.date.slice(5)})</span>
+                <span class="day-icon">${tomorrowIcon}</span>
+                <span class="day-temp">${tomorrow.mintempC}° ~ ${tomorrow.maxtempC}°C</span>
+                <span class="day-desc">${tomorrow.hourly[4].lang_ko?.[0]?.value || tomorrow.hourly[4].weatherDesc[0].value}</span>
+                <span class="day-precip">
+                  ${tomorrowMaxRain > 20 ? `💧${tomorrowMaxRain}%` : ''}
+                  ${tomorrowMaxSnow > 20 ? `❄️${tomorrowMaxSnow}%` : ''}
+                </span>
+              </div>
+              <div class="hourly-scroll">${renderHourly(tomorrow.hourly, '내일', false)}</div>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error('날씨 로드 실패:', error);
+        container.innerHTML = '<div class="weather-loading">⚠️ 날씨 정보를 가져올 수 없습니다</div>';
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      setTimeout(openCurrentWeek, 100);
+      loadWeather(); // 날씨 로드
+    });
+  </script>
+</body>
+</html>
