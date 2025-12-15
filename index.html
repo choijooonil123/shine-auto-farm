@@ -122,6 +122,11 @@
       font-size: 11px;
     }
     .header .stat b { color: #fcd34d; }
+    .header .stat.phase-stat {
+      background: rgba(139, 92, 246, 0.3);
+      border: 1px solid #8b5cf6;
+    }
+    .header .stat.phase-stat b { color: #c4b5fd; font-size: 10px; }
     
     /* Week List */
     .week-list { display: flex; flex-direction: column; gap: 2px; }
@@ -135,6 +140,15 @@
     }
     .week-item.active { border-left-color: #a855f7; }
     .week-item.current { border-left-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
+    .week-item.highlight { 
+      animation: highlightPulse 0.5s ease-in-out 3;
+      border-left-color: #f59e0b; 
+      box-shadow: 0 0 0 2px #f59e0b; 
+    }
+    @keyframes highlightPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
     
     /* Week Header (Toggle) */
     .week-header {
@@ -149,7 +163,7 @@
     .week-icon { font-size: 14px; width: 20px; text-align: center; }
     .week-info { flex: 1; display: flex; align-items: baseline; gap: 6px; }
     .week-title { font-weight: 600; font-size: 11px; }
-    .week-dates { font-size: 9px; color: #fde047; font-weight: 700; }
+    .week-dates { font-size: 9px; color: #475569; }
     .week-alert {
       font-size: 8px;
       padding: 2px 6px;
@@ -171,7 +185,7 @@
     /* Week Content */
     .week-content {
       display: none;
-      padding: 0 12px 12px;
+      padding: 0 8px 12px;
     }
     .week-item.open .week-content { display: block; }
     
@@ -219,6 +233,1027 @@
     .row.vent { border-left: 2px solid #facc15; }
     .row.pest { border-left: 2px solid #f87171; }
     .row.pf { border-left: 2px solid #f472b6; }
+    
+    /* Weekly Scheduler */
+    .scheduler-panel {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+    .scheduler-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .scheduler-header .title { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    .scheduler-header .toggle { font-size: 10px; color: #64748b; margin-left: auto; }
+    .scheduler-content { display: none; }
+    .scheduler-panel.open .scheduler-content { display: block; }
+    .scheduler-panel.open .toggle { transform: rotate(180deg); }
+    
+    /* Week Calendar */
+    .week-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    .day-column {
+      background: #1e293b;
+      border-radius: 6px;
+      padding: 8px 6px;
+      min-height: 200px;
+    }
+    .day-column.blocked {
+      background: #18181b;
+      opacity: 0.6;
+    }
+    .day-column.today {
+      border: 2px solid #22c55e;
+    }
+    .day-header-cal {
+      text-align: center;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 6px;
+    }
+    .day-name { font-size: 10px; color: #94a3b8; }
+    .day-date { font-size: 12px; font-weight: 600; color: #fef08a; }
+    .weather-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .day-weather {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 8px;
+      color: #64748b;
+      padding: 3px 5px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.2);
+    }
+    .day-weather.historical {
+      border: 1px solid #fbbf24;
+    }
+    .day-weather.historical .temp { color: #fbbf24; }
+    .day-weather.historical .weather-label { color: #fbbf24; font-size: 7px; }
+    .day-weather.realtime {
+      border: 1px solid #22c55e;
+    }
+    .day-weather.realtime .temp { color: #22c55e; }
+    .day-weather.realtime .weather-label { color: #22c55e; font-size: 7px; }
+    .day-weather .temp { font-weight: 600; }
+    .day-weather .rain { color: #38bdf8; }
+    .day-blocked-label {
+      text-align: center;
+      font-size: 9px;
+      color: #ef4444;
+      padding: 10px 0;
+    }
+    
+    /* Hourly Climate Display */
+    .hourly-climate {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 4px;
+      padding: 4px;
+      background: rgba(71, 85, 105, 0.3);
+      border-radius: 4px;
+    }
+    .hourly-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8px;
+    }
+    .h-time { color: #64748b; width: 20px; }
+    .h-temp { color: #fbbf24; font-weight: 600; width: 28px; text-align: right; }
+    .h-humid { color: #38bdf8; width: 28px; text-align: right; }
+    
+    /* Historical label */
+    .hourly-climate::before {
+      content: '📅 5년평균 시간별';
+      display: block;
+      font-size: 7px;
+      color: #fbbf24;
+      margin-bottom: 2px;
+      opacity: 0.8;
+    }
+    
+    /* Weather Source Badges */
+    .historical-badge {
+      font-size: 7px;
+      color: #fbbf24;
+      background: rgba(251, 191, 36, 0.15);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .realtime-badge {
+      font-size: 7px;
+      color: #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    
+    /* Weather Alerts */
+    .weather-alerts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-top: 4px;
+    }
+    .alert-badge {
+      font-size: 7px;
+      padding: 2px 4px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .alert-badge.EXTREME_HEAT { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .alert-badge.HEAT_WAVE { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+    .alert-badge.TROPICAL_NIGHT { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+    .alert-badge.HEAVY_RAIN { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .alert-badge.MONSOON { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+    .alert-badge.LOCALIZED_STORM { background: rgba(30, 64, 175, 0.2); color: #60a5fa; }
+    .alert-badge.COLD_SNAP { background: rgba(14, 165, 233, 0.2); color: #0ea5e9; }
+    .alert-badge.FROST { background: rgba(224, 242, 254, 0.3); color: #bae6fd; }
+    
+    .day-column.has-alert {
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .day-column.has-severe-alert {
+      border: 2px solid rgba(239, 68, 68, 0.6);
+      background: linear-gradient(135deg, #1e293b, rgba(127, 29, 29, 0.2));
+    }
+    
+    /* Alert recommendation */
+    .alert-recommendation {
+      font-size: 8px;
+      color: #fbbf24;
+      background: rgba(251, 191, 36, 0.1);
+      padding: 4px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      border-left: 2px solid #fbbf24;
+    }
+    
+    /* 52주 전체 작업 배치표 */
+    .all-weeks-schedule {
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 10px;
+      border: 1px solid #334155;
+      overflow: hidden;
+    }
+    .all-weeks-header {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4c1d95, #1e1b4b);
+    }
+    .all-weeks-header:hover { background: linear-gradient(135deg, #5b21b6, #2e1065); }
+    .all-weeks-header .title { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    .all-weeks-header .toggle { margin-left: auto; font-size: 10px; color: #94a3b8; transition: transform 0.3s; }
+    .all-weeks-schedule.open .all-weeks-header .toggle { transform: rotate(180deg); }
+    
+    .all-weeks-content {
+      padding: 12px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .all-weeks-loading {
+      text-align: center;
+      color: #64748b;
+      padding: 20px;
+      font-size: 11px;
+    }
+    
+    /* 작업별 연간 스케줄 */
+    .task-yearly-schedule {
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 10px;
+      border: 1px solid #334155;
+      overflow: hidden;
+    }
+    .task-yearly-header {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #065f46, #064e3b);
+    }
+    .task-yearly-header:hover { background: linear-gradient(135deg, #047857, #065f46); }
+    .task-yearly-header .title { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    .task-yearly-header .toggle { margin-left: auto; font-size: 10px; color: #94a3b8; transition: transform 0.3s; }
+    .task-yearly-schedule.open .task-yearly-header .toggle { transform: rotate(180deg); }
+    
+    .task-yearly-content {
+      padding: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .task-filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 8px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 6px;
+    }
+    .task-filter label { font-size: 11px; color: #94a3b8; }
+    .task-filter select {
+      background: #334155;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .task-yearly-grid {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 2px;
+    }
+    .task-yearly-cell {
+      background: #1e293b;
+      padding: 4px;
+      text-align: center;
+      font-size: 8px;
+      border-radius: 3px;
+      min-height: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .task-yearly-cell.header {
+      background: #334155;
+      font-weight: 600;
+      color: #e2e8f0;
+      font-size: 9px;
+    }
+    .task-yearly-cell.week-label {
+      background: #475569;
+      color: #cbd5e1;
+      font-size: 7px;
+    }
+    .task-yearly-cell.has-task {
+      background: rgba(34, 197, 94, 0.3);
+      border: 1px solid #22c55e;
+    }
+    .task-yearly-cell.has-task.GA { background: rgba(16, 185, 129, 0.3); border-color: #10b981; }
+    .task-yearly-cell.has-task.SPRAY { background: rgba(245, 158, 11, 0.3); border-color: #f59e0b; }
+    .task-yearly-cell.has-task.WATER { background: rgba(56, 189, 248, 0.3); border-color: #38bdf8; }
+    .task-yearly-cell.has-task.FERTILIZER { background: rgba(34, 197, 94, 0.3); border-color: #22c55e; }
+    .task-yearly-cell.has-task.PF { background: rgba(139, 92, 246, 0.3); border-color: #8b5cf6; }
+    .task-yearly-cell.has-task.PRUNING { background: rgba(236, 72, 153, 0.3); border-color: #ec4899; }
+    .task-yearly-cell.has-task.BAGGING { background: rgba(251, 191, 36, 0.3); border-color: #fbbf24; }
+    .task-yearly-cell.has-task.HARVEST { background: rgba(168, 85, 247, 0.3); border-color: #a855f7; }
+    .task-yearly-cell.has-task.HUMIDITY { background: rgba(6, 182, 212, 0.3); border-color: #06b6d4; }
+    .task-yearly-cell .task-icon { font-size: 10px; }
+    .task-yearly-cell .task-count { font-size: 7px; color: #94a3b8; }
+    .task-yearly-cell.current { box-shadow: 0 0 0 2px #22c55e; }
+    .task-yearly-loading {
+      text-align: center;
+      color: #64748b;
+      padding: 20px;
+      font-size: 11px;
+    }
+    
+    /* 주차별 스케줄 카드 */
+    .week-schedule-card {
+      background: #1e293b;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border-left: 4px solid #475569;
+      overflow: hidden;
+    }
+    .week-schedule-card.current { border-left-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
+    
+    .week-schedule-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      cursor: pointer;
+      gap: 8px;
+    }
+    .week-schedule-header:hover { background: #334155; }
+    .week-schedule-icon { font-size: 16px; }
+    .week-schedule-title { font-size: 11px; font-weight: 600; color: #e2e8f0; }
+    .week-schedule-dates { font-size: 9px; color: #64748b; }
+    .week-schedule-climate {
+      margin-left: auto;
+      font-size: 9px;
+      color: #fbbf24;
+      display: flex;
+      gap: 8px;
+    }
+    .week-schedule-toggle { font-size: 10px; color: #64748b; }
+    
+    .week-schedule-content {
+      display: none;
+      padding: 0 12px 12px;
+    }
+    .week-schedule-card.open .week-schedule-content { display: block; }
+    .week-schedule-card.open .week-schedule-toggle { transform: rotate(180deg); }
+    
+    /* 요일별 작업 그리드 */
+    .week-day-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .day-schedule-item {
+      background: #334155;
+      border-radius: 6px;
+      padding: 8px;
+      min-height: 80px;
+    }
+    .day-schedule-item.blocked {
+      background: #18181b;
+      opacity: 0.5;
+    }
+    .day-schedule-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #475569;
+    }
+    .day-schedule-climate {
+      font-size: 8px;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .day-schedule-tasks {
+      font-size: 8px;
+    }
+    .day-task-item {
+      background: #475569;
+      padding: 3px 5px;
+      border-radius: 3px;
+      margin-bottom: 2px;
+      border-left: 2px solid #a855f7;
+    }
+    .day-task-item.weather-sensitive { border-left-color: #fbbf24; }
+    .day-task-item.weather-independent { border-left-color: #64748b; }
+    
+    /* 52주 전체 캘린더 (현재 주와 동일 형태) */
+    .week-full-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+    .week-calendar-full {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+    .day-col-full {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 200px;
+    }
+    .day-col-full.blocked {
+      background: #18181b;
+      opacity: 0.6;
+      min-height: 100px;
+    }
+    .day-header-full {
+      text-align: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 8px;
+    }
+    .day-name-full {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e2e8f0;
+      padding: 6px 0;
+    }
+    .day-col-full:first-child .day-name-full { color: #ef4444; }
+    .day-col-full:last-child .day-name-full { color: #3b82f6; }
+    .day-climate-full {
+      margin-top: 6px;
+    }
+    .badge-5yr {
+      font-size: 8px;
+      color: #fbbf24;
+      background: rgba(251, 191, 36, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .hourly-mini {
+      margin-top: 6px;
+      background: rgba(71, 85, 105, 0.4);
+      border-radius: 4px;
+      padding: 6px;
+    }
+    .hm-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      padding: 2px 0;
+    }
+    .hm-t { color: #94a3b8; width: 20px; font-weight: 500; }
+    .hm-temp { color: #fbbf24; width: 32px; text-align: right; font-weight: 600; }
+    .hm-hum { color: #38bdf8; width: 32px; text-align: right; font-weight: 600; }
+    
+    .blocked-label {
+      font-size: 11px;
+      color: #ef4444;
+      padding: 25px 0;
+      font-weight: 600;
+    }
+    
+    .day-tasks-full {
+      font-size: 9px;
+      margin-top: 8px;
+    }
+    .no-task {
+      color: #64748b;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 10px;
+    }
+    .task-item-full {
+      background: #334155;
+      border-radius: 4px;
+      padding: 8px 10px;
+      margin-bottom: 5px;
+      border-left: 3px solid #a855f7;
+    }
+    .task-item-full.ws { border-left-color: #fbbf24; }
+    .task-item-full.wi { border-left-color: #64748b; }
+    .task-item-full.water { border-left-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+    .task-item-full.fertilizer { border-left-color: #22c55e; background: rgba(34, 197, 94, 0.1); cursor: pointer; }
+    .task-item-full.fertilizer:hover { background: rgba(34, 197, 94, 0.2); }
+    .task-item-full.spray { border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.1); cursor: pointer; }
+    .task-item-full.spray:hover { background: rgba(245, 158, 11, 0.2); }
+    .task-item-full.pf { border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); cursor: pointer; }
+    .task-item-full.pf:hover { background: rgba(139, 92, 246, 0.2); }
+    .task-item-full.humidity { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.1); cursor: pointer; }
+    .task-item-full.humidity:hover { background: rgba(6, 182, 212, 0.2); }
+    .task-time-full { color: #fef08a; font-size: 9px; }
+    .task-detail-full {
+      display: none;
+      margin-top: 6px;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      font-size: 8px;
+      color: #94a3b8;
+      white-space: pre-line;
+      line-height: 1.4;
+    }
+    .task-item-full.open .task-detail-full { display: block; }
+    .task-name-full { color: #e2e8f0; font-size: 10px; font-weight: 600; margin: 3px 0; }
+    .task-cond-full { color: #fbbf24; font-size: 9px; }
+    
+    /* 주차별 내장 스케줄러 */
+    .week-scheduler-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, #1e1b4b, #0f172a);
+      border-radius: 8px;
+      border: 1px solid #4c1d95;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .week-scheduler-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px;
+      background: rgba(168, 85, 247, 0.1);
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .week-scheduler-title:hover {
+      background: rgba(168, 85, 247, 0.2);
+    }
+    .week-scheduler-toggle {
+      margin-left: auto;
+      font-size: 10px;
+      color: #94a3b8;
+      transition: transform 0.3s;
+    }
+    .week-scheduler-section.open .week-scheduler-toggle {
+      transform: rotate(180deg);
+    }
+    .week-scheduler-section.open .week-scheduler-title {
+      margin-bottom: 10px;
+    }
+    .week-scheduler-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+    .wsc-day {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 200px;
+    }
+    .wsc-day.blocked {
+      background: #18181b;
+      opacity: 0.6;
+      min-height: 80px;
+    }
+    .wsc-day.today {
+      border: 2px solid #22c55e;
+    }
+    .wsc-day.has-alert {
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .wsc-day.has-severe-alert {
+      border: 2px solid rgba(239, 68, 68, 0.6);
+      background: linear-gradient(135deg, #1e293b, rgba(127, 29, 29, 0.2));
+    }
+    .wsc-header {
+      text-align: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 8px;
+    }
+    .wsc-dayname { 
+      font-size: 13px; 
+      font-weight: 700; 
+      color: #e2e8f0;
+      padding: 6px 0;
+    }
+    .wsc-day:first-child .wsc-dayname { color: #ef4444; }
+    .wsc-day:last-child .wsc-dayname { color: #3b82f6; }
+    .wsc-badge { 
+      display: inline-block;
+      font-size: 8px; 
+      color: #fbbf24; 
+      background: rgba(251,191,36,0.2); 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .wsc-climate {
+      margin-top: 6px;
+      background: rgba(71,85,105,0.4);
+      border-radius: 4px;
+      padding: 6px;
+    }
+    .wsc-climate-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      padding: 2px 0;
+    }
+    /* 시간별 스크롤 (오늘·내일 스타일) */
+    .wsc-hourly-scroll {
+      display: flex;
+      gap: 2px;
+      overflow-x: auto;
+      padding: 4px 0;
+      margin-top: 4px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+    .wsc-hourly-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 32px;
+      padding: 3px 2px;
+      background: rgba(71,85,105,0.3);
+      border-radius: 3px;
+    }
+    .wsc-h-time {
+      font-size: 8px;
+      color: #fef08a;
+      font-weight: 500;
+    }
+    .wsc-h-temp {
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .wsc-h-hum {
+      font-size: 7px;
+      color: #67e8f9;
+    }
+    .wsc-hr { color: #94a3b8; width: 20px; font-weight: 500; }
+    .wsc-temp { color: #fbbf24; width: 32px; text-align: right; font-weight: 600; }
+    .wsc-hum { color: #38bdf8; width: 32px; text-align: right; font-weight: 600; }
+    .wsc-blocked-label {
+      text-align: center;
+      font-size: 11px;
+      color: #ef4444;
+      padding: 25px 0;
+      font-weight: 600;
+    }
+    .wsc-tasks { margin-top: 6px; }
+    .wsc-task {
+      background: #334155;
+      border-radius: 4px;
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      border-left: 3px solid #a855f7;
+      font-size: 9px;
+    }
+    .wsc-task.ws { border-left-color: #fbbf24; }
+    .wsc-task.wi { border-left-color: #64748b; }
+    .wsc-task.water { border-left-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+    .wsc-task.fertilizer { border-left-color: #22c55e; background: rgba(34, 197, 94, 0.1); cursor: pointer; }
+    .wsc-task.fertilizer:hover { background: rgba(34, 197, 94, 0.2); }
+    .wsc-task.spray { border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.1); cursor: pointer; }
+    .wsc-task.spray:hover { background: rgba(245, 158, 11, 0.2); }
+    .wsc-task.pf { border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); cursor: pointer; }
+    .wsc-task.pf:hover { background: rgba(139, 92, 246, 0.2); }
+    .wsc-task.humidity { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.1); cursor: pointer; }
+    .wsc-task.humidity:hover { background: rgba(6, 182, 212, 0.2); }
+    .wsc-task-time { color: #fef08a; font-size: 8px; }
+    .wsc-task-detail {
+      display: none;
+      margin-top: 6px;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      font-size: 8px;
+      color: #94a3b8;
+      white-space: pre-line;
+      line-height: 1.4;
+    }
+    .wsc-task.open .wsc-task-detail { display: block; }
+    .wsc-task-name { color: #e2e8f0; font-weight: 600; margin: 2px 0; font-size: 9px; }
+    .wsc-task-cond { font-size: 8px; }
+    .wsc-no-task { color: #64748b; text-align: center; padding: 15px 0; font-size: 10px; }
+    
+    /* 드래그 앤 드롭 스타일 */
+    .wsc-task[draggable="true"] { cursor: grab; }
+    .wsc-task[draggable="true"]:active { cursor: grabbing; }
+    .wsc-task.dragging { opacity: 0.5; transform: scale(0.95); }
+    .wsc-day.drag-over { background: rgba(59, 130, 246, 0.2); border: 2px dashed #3b82f6; }
+    .wsc-day.drag-over .wsc-tasks { min-height: 50px; }
+    .task-item-full[draggable="true"] { cursor: grab; }
+    .task-item-full[draggable="true"]:active { cursor: grabbing; }
+    .task-item-full.dragging { opacity: 0.5; transform: scale(0.95); }
+    .day-column-full.drag-over, .day-col-full.drag-over { background: rgba(59, 130, 246, 0.2); border: 2px dashed #3b82f6; }
+    .drag-hint { font-size: 8px; color: #64748b; text-align: center; margin-top: 4px; }
+    .drag-hint::before { content: '↔️ '; }
+    .reset-moves-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      margin-left: auto;
+      margin-right: 10px;
+    }
+    .reset-moves-btn:hover { background: #dc2626; }
+    
+    /* 작업 상태 버튼 */
+    .task-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+      margin-top: 4px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .task-action-btn {
+      background: #475569;
+      color: #e2e8f0;
+      border: none;
+      border-radius: 3px;
+      padding: 3px 8px;
+      font-size: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .task-action-btn:hover { background: #64748b; }
+    .task-action-btn.complete { background: rgba(34, 197, 94, 0.3); color: #86efac; }
+    .task-action-btn.complete:hover { background: rgba(34, 197, 94, 0.5); }
+    .task-action-btn.delete { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+    .task-action-btn.delete:hover { background: rgba(239, 68, 68, 0.4); }
+    .task-action-btn.restore { background: rgba(59, 130, 246, 0.3); color: #93c5fd; }
+    .task-action-btn.restore:hover { background: rgba(59, 130, 246, 0.5); }
+    .task-action-btn.permanent-delete { background: rgba(127, 29, 29, 0.4); color: #fecaca; }
+    .task-action-btn.permanent-delete:hover { background: rgba(127, 29, 29, 0.6); }
+    
+    /* 완료된 작업 스타일 */
+    .wsc-task.completed, .task-item-full.completed {
+      opacity: 0.6;
+      background: rgba(34, 197, 94, 0.1) !important;
+      border-left-color: #22c55e !important;
+    }
+    .wsc-task.completed .wsc-task-name, .task-item-full.completed .task-name-full {
+      text-decoration: line-through;
+      color: #22c55e;
+    }
+    
+    /* 삭제된 작업 스타일 */
+    .wsc-task.deleted, .task-item-full.deleted {
+      opacity: 0.4;
+      background: rgba(239, 68, 68, 0.1) !important;
+      border-left-color: #ef4444 !important;
+    }
+    .wsc-task.deleted .wsc-task-name, .task-item-full.deleted .task-name-full {
+      text-decoration: line-through;
+      color: #ef4444;
+    }
+    
+    /* 이월된 작업 표시 */
+    .task-carried-over {
+      font-size: 7px;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.2);
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-left: 4px;
+    }
+    
+    /* 작업 상태 요약 */
+    .task-status-summary {
+      display: flex;
+      gap: 8px;
+      font-size: 9px;
+      margin-top: 6px;
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+    .status-item { display: flex; align-items: center; gap: 3px; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-dot.pending { background: #fbbf24; }
+    .status-dot.completed { background: #22c55e; }
+    .status-dot.deleted { background: #ef4444; }
+    
+    /* Scheduled Tasks */
+    .scheduled-task {
+      background: #334155;
+      border-radius: 4px;
+      padding: 6px;
+      margin-bottom: 4px;
+      font-size: 9px;
+      border-left: 3px solid #a855f7;
+    }
+    .scheduled-task.GA { border-left-color: #10b981; }
+    .scheduled-task.SPRAY { border-left-color: #f59e0b; }
+    .scheduled-task.WATER { border-left-color: #3b82f6; }
+    .scheduled-task.PRUNING { border-left-color: #ec4899; }
+    .scheduled-task.HARVEST { border-left-color: #22c55e; }
+    .scheduled-task.warning { border-left-color: #ef4444; background: rgba(239,68,68,0.1); }
+    .scheduled-task.weather-independent { border-left-color: #64748b; background: rgba(100, 116, 139, 0.15); }
+    .scheduled-task.PURCHASE { border-left-color: #94a3b8; }
+    .scheduled-task.EQUIPMENT { border-left-color: #78716c; }
+    .scheduled-task.PLANNING { border-left-color: #a1a1aa; }
+    .scheduled-task.HEATING { border-left-color: #f97316; }
+    .scheduled-task.CLEANING { border-left-color: #71717a; }
+    .scheduled-task.OBSERVATION { border-left-color: #a3a3a3; }
+    .scheduled-task.SENSOR { border-left-color: #6b7280; }
+    .scheduled-task.CUSTOM { border-left-color: #a855f7; background: rgba(168, 85, 247, 0.15); }
+    .scheduled-task.CUSTOM::before {
+      content: '✏️';
+      font-size: 8px;
+      margin-right: 4px;
+    }
+    .scheduled-task.water-task { border-left-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+    .scheduled-task.fertilizer-task { border-left-color: #22c55e; background: rgba(34, 197, 94, 0.1); cursor: pointer; }
+    .scheduled-task.fertilizer-task:hover { background: rgba(34, 197, 94, 0.2); }
+    .scheduled-task.pf-task { border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); cursor: pointer; }
+    .scheduled-task.pf-task:hover { background: rgba(139, 92, 246, 0.2); }
+    .scheduled-task.spray-task { border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.1); cursor: pointer; }
+    .scheduled-task.spray-task:hover { background: rgba(245, 158, 11, 0.2); }
+    .scheduled-task.FERTILIZER { border-left-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+    .scheduled-task.PF { border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+    .scheduled-task.HUMIDITY { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
+    .scheduled-task.humidity-task { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.1); cursor: pointer; }
+    .scheduled-task.humidity-task:hover { background: rgba(6, 182, 212, 0.2); }
+    
+    /* 완료/삭제 상태 */
+    .scheduled-task.completed {
+      opacity: 0.6;
+      background: rgba(34, 197, 94, 0.1) !important;
+      border-left-color: #22c55e !important;
+    }
+    .scheduled-task.completed .task-name {
+      text-decoration: line-through;
+      color: #22c55e;
+    }
+    .scheduled-task.deleted {
+      opacity: 0.4;
+      background: rgba(239, 68, 68, 0.1) !important;
+      border-left-color: #ef4444 !important;
+    }
+    .scheduled-task.deleted .task-name {
+      text-decoration: line-through;
+      color: #ef4444;
+    }
+    
+    /* 상세 내용 표시 */
+    .scheduled-task .wsc-task-detail {
+      display: none;
+      margin-top: 6px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      font-size: 9px;
+      color: #94a3b8;
+      white-space: pre-line;
+      line-height: 1.5;
+    }
+    .scheduled-task.open .wsc-task-detail { display: block; }
+    .scheduled-task[onclick] { cursor: pointer; }
+    .scheduled-task[onclick]:hover { background: rgba(255,255,255,0.05); }
+    
+    .task-time { color: #fef08a; font-size: 8px; }
+    .task-name { color: #e2e8f0; font-weight: 500; margin-top: 2px; }
+    .task-weather-info { color: #64748b; font-size: 8px; margin-top: 2px; }
+    
+    /* Collapsible Section */
+    .collapsible-section {
+      margin-top: 10px;
+      background: #1e293b;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      overflow: hidden;
+    }
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #94a3b8;
+      background: rgba(71, 85, 105, 0.3);
+      transition: background 0.2s;
+    }
+    .collapsible-header:hover {
+      background: rgba(71, 85, 105, 0.5);
+    }
+    .collapsible-toggle {
+      margin-left: auto;
+      font-size: 10px;
+      color: #64748b;
+      transition: transform 0.3s;
+    }
+    .collapsible-section.open .collapsible-toggle {
+      transform: rotate(180deg);
+    }
+    .collapsible-content {
+      display: none;
+      padding: 12px;
+    }
+    .collapsible-section.open .collapsible-content {
+      display: block;
+    }
+    
+    /* Custom Task Section */
+    .custom-task-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 8px;
+    }
+    .custom-task-form {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .custom-task-form input, .custom-task-form select {
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      color: #e2e8f0;
+      font-size: 10px;
+      padding: 6px 8px;
+    }
+    .custom-task-form input[type="text"] { min-width: 150px; }
+    .custom-task-form button {
+      background: #a855f7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 6px 12px;
+    }
+    .custom-task-form button:hover { background: #9333ea; }
+    
+    .custom-task-list {
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .custom-task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: #1e293b;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      font-size: 9px;
+      border-left: 3px solid #a855f7;
+    }
+    .custom-task-item.weather-sensitive { border-left-color: #fbbf24; }
+    .custom-task-item .task-delete {
+      margin-left: auto;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    /* External Events */
+    .external-events {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+    }
+    .event-form {
+      display: grid;
+      grid-template-columns: 1fr 100px 60px 60px auto;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .event-form input, .event-form select {
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      color: #e2e8f0;
+      font-size: 10px;
+      padding: 6px 8px;
+    }
+    .event-form button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+    .event-form button:hover { background: #4f46e5; }
+    
+    .event-list {
+      max-height: 100px;
+      overflow-y: auto;
+    }
+    .event-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      background: #1e293b;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      font-size: 9px;
+    }
+    .event-item .event-delete {
+      margin-left: auto;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    /* Unscheduled Tasks */
+    .unscheduled-section {
+      margin-top: 12px;
+      padding: 10px;
+      background: rgba(239,68,68,0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .unscheduled-title {
+      font-size: 10px;
+      color: #fca5a5;
+      margin-bottom: 6px;
+    }
     
     /* Badge */
     .badge {
@@ -268,8 +1303,9 @@
     <h1>🍇 샤인 주차별 전문가</h1>
     <input type="date" id="heatStart" value="2025-01-19" title="열가둠 시작일">
     <input type="date" id="targetDate" title="분석일">
-    <div class="stat">주차 <b id="dWeek">-</b></div>
-    <div class="stat">경과 <b id="dDays">-</b></div>
+    <div class="stat">남은 주 <b id="dWeek">-</b></div>
+    <div class="stat">남은 일 <b id="dDays">-</b></div>
+    <div class="stat phase-stat"><b id="dPhase">-</b></div>
   </div>
   
   <!-- Weather Panel -->
@@ -277,7 +1313,7 @@
     <div class="weather-header">
       <span class="title">🌤️ 오늘·내일 날씨</span>
       <div class="location">
-        <select id="weatherLocation" onchange="loadWeather()">
+        <select id="weatherLocation" onchange="loadWeather(); loadScheduler();">
           <option value="Gimcheon">김천</option>
           <option value="Sangju">상주</option>
           <option value="Yeongcheon">영천</option>
@@ -289,11 +1325,254 @@
     <div id="weatherContent"><div class="weather-loading">날씨 로딩중...</div></div>
   </div>
   
+  <!-- Weekly Scheduler -->
+  <div class="scheduler-panel open" id="schedulerPanel">
+    <div class="scheduler-header" onclick="toggleScheduler()">
+      <span class="title">🗓️ 주간 스마트 스케줄러</span>
+      <span style="font-size:10px; color:#94a3b8; margin-left:10px;">날씨 기반 자동 작업 배치 | ↔️ 드래그로 작업 이동</span>
+      <button class="reset-moves-btn" onclick="event.stopPropagation(); carryOverManually();" title="이전 주 미완료 작업 이월" style="background:#f59e0b;">📌 이월</button>
+      <button class="reset-moves-btn" onclick="event.stopPropagation(); resetTaskMoves();" title="작업 이동 초기화">🔄 이동초기화</button>
+      <button class="reset-moves-btn" onclick="event.stopPropagation(); resetAllTaskStates();" title="작업 상태 초기화">🗑️ 상태초기화</button>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="scheduler-content">
+      <div class="week-calendar" id="weekCalendar">
+        <div class="weather-loading">스케줄 로딩중...</div>
+      </div>
+      
+      <!-- 배치 불가 작업 -->
+      <div class="unscheduled-section" id="unscheduledSection" style="display:none;">
+        <div class="unscheduled-title">⚠️ 이번 주 배치 불가 작업 (날씨 조건 불충족)</div>
+        <div id="unscheduledTasks"></div>
+      </div>
+      
+      <!-- 사용자 작업 추가 -->
+      <div class="collapsible-section" id="customTaskSection">
+        <div class="collapsible-header" onclick="toggleCollapsible('customTaskSection')">
+          <span>✏️ 작업 일정 추가</span>
+          <span style="color:#64748b; font-size:9px; margin-left:8px;">(사용자 정의 작업)</span>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="custom-task-form">
+            <input type="text" id="customTaskName" placeholder="작업명 (예: 비료 살포, 병해 점검)" style="flex:2;" />
+            <input type="date" id="customTaskDate" />
+            <select id="customTaskStart">
+              <option value="6">06:00</option>
+              <option value="7">07:00</option>
+              <option value="8">08:00</option>
+              <option value="9" selected>09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+            </select>
+            <select id="customTaskDuration">
+              <option value="1">1시간</option>
+              <option value="2" selected>2시간</option>
+              <option value="3">3시간</option>
+              <option value="4">4시간</option>
+              <option value="6">6시간</option>
+            </select>
+            <select id="customTaskType">
+              <option value="weather">🌡️ 날씨고려</option>
+              <option value="independent">📦 날씨무관</option>
+            </select>
+            <button onclick="addCustomTask()">추가</button>
+          </div>
+          <div class="custom-task-list" id="customTaskList"></div>
+        </div>
+      </div>
+      
+      <!-- 외부 일정 관리 -->
+      <div class="collapsible-section" id="externalEventSection">
+        <div class="collapsible-header" onclick="toggleCollapsible('externalEventSection')">
+          <span>📅 외부 일정 추가</span>
+          <span style="color:#64748b; font-size:9px; margin-left:8px;">(작업 불가 시간)</span>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="event-form">
+            <input type="text" id="eventName" placeholder="일정명 (예: 병원, 모임)" />
+            <input type="date" id="eventDate" />
+            <select id="eventStart">
+              <option value="6">06:00</option>
+              <option value="7">07:00</option>
+              <option value="8">08:00</option>
+              <option value="9" selected>09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18">18:00</option>
+            </select>
+            <select id="eventEnd">
+              <option value="7">07:00</option>
+              <option value="8">08:00</option>
+              <option value="9">09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12" selected>12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18">18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+            </select>
+            <button onclick="addExternalEvent()">추가</button>
+          </div>
+          <div class="event-list" id="eventList"></div>
+        </div>
+      </div>
+      
+      <!-- 자동 배치 기준 -->
+      <div class="collapsible-section" id="autoPlacementSection">
+        <div class="collapsible-header" onclick="toggleCollapsible('autoPlacementSection')">
+          <span>📋 자동 배치 기준</span>
+          <span style="color:#64748b; font-size:9px; margin-left:8px;">(작업 조건 안내)</span>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+            
+            <!-- 좌측: 자동 배치 기준 -->
+            <div style="padding:10px; background:#0f172a; border-radius:6px; font-size:9px; color:#64748b;">
+              <strong style="color:#a855f7; font-size:10px;">🚫 작업 불가일</strong><br>
+              <span style="color:#ef4444; margin-left:10px;">일요일, 수요일</span><br><br>
+              
+              <strong style="color:#a855f7; font-size:10px;">⏰ 작업 시간</strong><br>
+              <span style="margin-left:10px;">일출 ~ 일몰</span><br><br>
+              
+              <strong style="color:#fbbf24;">🌡️ 날씨 민감 작업</strong><br>
+              <span style="margin-left:10px;">• GA/메리트청: 20~28°C</span><br>
+              <span style="margin-left:10px;">• 약제/엽면: 15~30°C</span><br>
+              <span style="margin-left:10px;">• 전정/적과: 10~30°C</span><br>
+              <span style="margin-left:10px;">• 수확: 15~28°C, 비0%</span><br><br>
+              
+              <strong style="color:#94a3b8;">📦 날씨 무관 작업</strong><br>
+              <span style="margin-left:10px;">• 자재/비료/농약 구입</span><br>
+              <span style="margin-left:10px;">• 시설 점검, 계획 수립</span><br>
+              <span style="margin-left:10px;">• 센서 설치, 장비 테스트</span>
+            </div>
+            
+            <!-- 중앙: 날씨 데이터 -->
+            <div style="padding:10px; background:#0f172a; border-radius:6px; font-size:9px; color:#64748b;">
+              <strong style="color:#a855f7; font-size:10px;">🌤️ 날씨 데이터</strong><br><br>
+              
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <span class="realtime-badge">🔴실시간</span>
+                <span>현재 날씨 API</span>
+              </div>
+              <span style="margin-left:10px; color:#22c55e;">오늘~내일 실제 날씨</span><br><br>
+              
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <span class="historical-badge">📅5년평균</span>
+                <span>동일 주차 평균</span>
+              </div>
+              <span style="margin-left:10px; color:#fbbf24;">기상청 5년 평년값</span><br>
+              <span style="margin-left:10px; color:#fbbf24;">(2020-2024 기준)</span><br>
+              <span style="margin-left:10px; color:#fbbf24;">→ 작업 배치 기준</span><br><br>
+              
+              <strong style="color:#e2e8f0;">시간별 표시:</strong><br>
+              <div style="margin-left:10px; margin-top:4px;">
+                <span style="color:#fbbf24;">🌡️ 온도°C</span>
+                <span style="color:#38bdf8; margin-left:8px;">💧 습도%</span>
+              </div>
+            </div>
+            
+            <!-- 우측: 이상기후 자동 감지 -->
+            <div style="padding:10px; background:#0f172a; border-radius:6px; font-size:9px; color:#64748b;">
+              <strong style="color:#a855f7; font-size:10px;">⚠️ 이상기후 자동 감지</strong><br><br>
+              
+              <div style="margin-bottom:4px;">
+                <span class="alert-badge EXTREME_HEAT">🔥 이상고온</span>
+                <span style="margin-left:6px;">35°C↑</span>
+              </div>
+              <div style="margin-bottom:4px;">
+                <span class="alert-badge HEAT_WAVE">🌡️ 폭염</span>
+                <span style="margin-left:6px;">33°C 3시간↑</span>
+              </div>
+              <div style="margin-bottom:4px;">
+                <span class="alert-badge TROPICAL_NIGHT">🌙 열대야</span>
+                <span style="margin-left:6px;">야간 25°C↑</span>
+              </div>
+              <div style="margin-bottom:4px;">
+                <span class="alert-badge HEAVY_RAIN">🌧️ 폭우</span>
+                <span style="margin-left:6px;">80%↑</span>
+              </div>
+              <div style="margin-bottom:4px;">
+                <span class="alert-badge MONSOON">☔ 장마</span>
+                <span style="margin-left:6px;">고습+다우</span>
+              </div>
+              <div>
+                <span class="alert-badge LOCALIZED_STORM">⛈️ 국지성호우</span>
+                <span style="margin-left:6px;">50mm↑</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 52주 전체 주간 스케줄러 -->
+  <div class="all-weeks-schedule" id="allWeeksSchedule">
+    <div class="all-weeks-header" onclick="toggleAllWeeksSchedule()">
+      <span class="title">📆 52주 전체 주간 스마트 스케줄러</span>
+      <span style="font-size:10px; color:#94a3b8; margin-left:10px;">기상청 5년 평년값 기준 작업 배치</span>
+      <span class="toggle" id="allWeeksToggle">▼</span>
+    </div>
+    <div class="all-weeks-content" id="allWeeksContent" style="display:none;">
+      <div class="all-weeks-loading">52주 스케줄러 로딩중...</div>
+    </div>
+  </div>
+  
+  <!-- 작업별 연간 스케줄 -->
+  <div class="task-yearly-schedule" id="taskYearlySchedule">
+    <div class="task-yearly-header" onclick="toggleTaskYearlySchedule()">
+      <span class="title">📋 작업별 연간 스케줄</span>
+      <span style="font-size:10px; color:#94a3b8; margin-left:10px;">작업 유형별 52주 일정 한눈에 보기</span>
+      <span class="toggle" id="taskYearlyToggle">▼</span>
+    </div>
+    <div class="task-yearly-content" id="taskYearlyContent" style="display:none;">
+      <div class="task-filter">
+        <label>작업 유형 선택:</label>
+        <select id="taskTypeFilter" onchange="renderTaskYearlySchedule()">
+          <option value="ALL">📊 전체 작업</option>
+          <option value="GA">🧪 GA처리</option>
+          <option value="SPRAY">🧴 약제살포</option>
+          <option value="WATER">💧 관수</option>
+          <option value="FERTILIZER">🌱 시비</option>
+          <option value="PF">🦠 PF농법</option>
+          <option value="PRUNING">✂️ 전정/유인</option>
+          <option value="BAGGING">🛍️ 봉지씌우기</option>
+          <option value="HARVEST">🍇 수확</option>
+          <option value="HUMIDITY">🌬️ 습도관리</option>
+        </select>
+      </div>
+      <div class="task-yearly-grid" id="taskYearlyGrid">
+        <div class="task-yearly-loading">로딩중...</div>
+      </div>
+    </div>
+  </div>
   
   <!-- Week List -->
   <div class="week-list" id="weekList"></div>
   
   <script src="shine_expert.js"></script>
+  <script src="weekly_scheduler.js"></script>
   <script>
     const $ = id => document.getElementById(id);
     let currentWeekNo = 1;
@@ -320,20 +1599,39 @@
       const rawWeekNo = getWeekNo(heatStart, targetDate);
       const daysFromStart = Math.floor((targetDate - heatStart) / (24 * 60 * 60 * 1000));
       
+      // 다음 시즌 1주차 열가둠 시작일 (내년 1/19) 까지 남은 일수/주차 계산
+      let nextHeatStart = new Date(targetDate.getFullYear() + 1, 0, 19); // 내년 1월 19일
+      // 만약 현재 날짜가 1/19 이전이면 올해 1/19로 계산
+      const thisYearHeat = new Date(targetDate.getFullYear(), 0, 19);
+      if (targetDate < thisYearHeat) {
+        nextHeatStart = thisYearHeat;
+      }
+      const daysRemaining = Math.ceil((nextHeatStart - targetDate) / (24 * 60 * 60 * 1000));
+      const weeksRemaining = Math.ceil(daysRemaining / 7);
+      
       // 시즌 범위 체크 (1~52주 = 연간 사이클)
+      const { WEEKLY_DATA } = window.ShineExpert;
+      
       if (rawWeekNo <= 0) {
         currentWeekNo = 0;
-        $('dWeek').textContent = '시즌 전';
-        $('dDays').textContent = 'D' + daysFromStart;
+        $('dWeek').textContent = '-' + weeksRemaining + '주';
+        $('dDays').textContent = 'D-' + daysRemaining;
+        $('dPhase').textContent = '시즌 준비';
       } else if (rawWeekNo > 52) {
-        // 52주 초과 시 다음 연도로 순환 (rawWeekNo % 52 또는 그냥 52주 표시)
+        // 52주 초과 시 다음 연도로 순환
         currentWeekNo = ((rawWeekNo - 1) % 52) + 1;
-        $('dWeek').textContent = currentWeekNo + '주';
-        $('dDays').textContent = 'D+' + daysFromStart;
+        const weekData = WEEKLY_DATA[currentWeekNo];
+        const phaseName = weekData ? weekData.phase : '';
+        $('dWeek').textContent = '-' + weeksRemaining + '주';
+        $('dDays').textContent = 'D-' + daysRemaining;
+        $('dPhase').textContent = phaseName;
       } else {
         currentWeekNo = rawWeekNo;
-        $('dWeek').textContent = rawWeekNo + '주';
-        $('dDays').textContent = 'D+' + daysFromStart;
+        const weekData = WEEKLY_DATA[currentWeekNo];
+        const phaseName = weekData ? weekData.phase : '';
+        $('dWeek').textContent = '-' + weeksRemaining + '주';
+        $('dDays').textContent = 'D-' + daysRemaining;
+        $('dPhase').textContent = phaseName;
       }
       
       updateWeekHighlight(currentWeekNo);
@@ -370,21 +1668,23 @@
             <div class="week-toggle">▼</div>
           </div>
           <div class="week-content" id="weekContent${i}">
-            ${renderWeekContent(w)}
+            ${renderWeekContent(w, i)}
           </div>
         `;
         container.appendChild(item);
       }
     }
     
-    function renderWeekContent(w) {
+    function renderWeekContent(w, weekNum) {
       const rb = w.pest.risk === 'HIGH' ? 'h' : w.pest.risk === 'MEDIUM' ? 'm' : 'l';
       
       return `
-        <div style="margin-bottom:8px;padding:6px;background:#1e293b;border-radius:4px;font-size:11px;">
-          <strong>🎯 목표:</strong> ${w.goal}
+        <div class="goal-header" onclick="toggleGoalContent(${weekNum})" style="margin-bottom:8px;padding:8px;background:#1e293b;border-radius:4px;font-size:11px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          <span><strong>🎯 목표:</strong> ${w.goal}</span>
+          <span class="goal-toggle" id="goalToggle${weekNum}" style="font-size:10px;color:#94a3b8;transition:transform 0.3s;">▼</span>
         </div>
         
+        <div class="goal-content" id="goalContent${weekNum}" style="display:none;">
         <div class="content-grid">
           <!-- 관수 -->
           <div class="card">
@@ -552,7 +1852,7 @@
           <div class="card">
             <div class="card-title">📋 이번 주 작업</div>
             <div class="task-list">
-              ${w.tasks.map((t, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="task_\${weekNum}_${i}"><span>${t}</span></div>`).join('')}
+              ${w.tasks.map((t, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="task_${weekNum}_${i}"><span>${t}</span></div>`).join('')}
             </div>
           </div>
           
@@ -560,8 +1860,20 @@
           <div class="card">
             <div class="card-title">✅ 체크포인트</div>
             <div class="task-list">
-              ${w.checkPoints.map((c, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="check_\${weekNum}_${i}"><span>${c}</span></div>`).join('')}
+              ${w.checkPoints.map((c, i) => `<div class="task" onclick="toggleTask(this)"><input type="checkbox" id="check_${weekNum}_${i}"><span>${c}</span></div>`).join('')}
             </div>
+          </div>
+        </div>
+        </div>
+        
+        <!-- 주간 스마트 스케줄러 -->
+        <div class="week-scheduler-section" id="weekSchedulerSection_${weekNum}">
+          <div class="week-scheduler-title" onclick="toggleWeekScheduler(${weekNum})">
+            🗓️ 주간 스마트 스케줄러 (5년 평균 기후 기준)
+            <span class="week-scheduler-toggle" id="weekSchedulerToggle_${weekNum}">▼</span>
+          </div>
+          <div class="week-scheduler-calendar" id="weekSchedulerCal_${weekNum}" style="display:none;">
+            <!-- JavaScript로 렌더링 -->
           </div>
         </div>
       `;
@@ -593,12 +1905,516 @@
       const items = document.querySelectorAll('.week-item');
       items.forEach((item, i) => {
         if (i + 1 === weekNo) {
+          const wasOpen = item.classList.contains('open');
           item.classList.toggle('open');
           item.classList.add('active');
+          
+          // 열릴 때 스케줄러 렌더링
+          if (!wasOpen) {
+            renderWeekSchedulerCalendar(weekNo);
+          }
         } else {
           item.classList.remove('active');
         }
       });
+    }
+    
+    // 목표 클릭 시 상세 내용 토글
+    function toggleGoalContent(weekNum) {
+      const content = document.getElementById(`goalContent${weekNum}`);
+      const toggle = document.getElementById(`goalToggle${weekNum}`);
+      
+      if (!content || !toggle) return;
+      
+      const isOpen = content.style.display !== 'none';
+      
+      if (isOpen) {
+        content.style.display = 'none';
+        toggle.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'block';
+        toggle.style.transform = 'rotate(180deg)';
+      }
+    }
+    
+    // 주차별 스케줄러 토글
+    function toggleWeekScheduler(weekNo) {
+      const section = document.getElementById(`weekSchedulerSection_${weekNo}`);
+      const calendar = document.getElementById(`weekSchedulerCal_${weekNo}`);
+      
+      if (!section || !calendar) return;
+      
+      const isOpen = section.classList.contains('open');
+      
+      if (isOpen) {
+        section.classList.remove('open');
+        calendar.style.display = 'none';
+      } else {
+        section.classList.add('open');
+        calendar.style.display = 'grid';
+        renderWeekSchedulerCalendar(weekNo);
+      }
+    }
+    
+    // 주차별 스케줄러 캘린더 렌더링
+    function renderWeekSchedulerCalendar(weekNo) {
+      const container = document.getElementById(`weekSchedulerCal_${weekNo}`);
+      if (!container) return;
+      
+      const { WEEKLY_DATA } = window.ShineExpert;
+      const weekData = WEEKLY_DATA[weekNo];
+      if (!weekData) return;
+      
+      const climate = WeeklyScheduler.getHistoricalClimate(weekNo);
+      const DAYS_FULL = ['일', '월', '화', '수', '목', '금', '토'];
+      
+      // 작업 분류
+      const tasks = weekData.tasks || [];
+      const classifiedTasks = tasks.map(t => ({
+        text: t,
+        type: WeeklyScheduler.classifyTask(t),
+        conditions: WeeklyScheduler.TASK_CONDITIONS[WeeklyScheduler.classifyTask(t)] || WeeklyScheduler.TASK_CONDITIONS.GENERAL
+      }));
+      
+      const weatherSensitive = classifiedTasks.filter(t => t.conditions.weatherSensitive !== false);
+      const weatherIndependent = classifiedTasks.filter(t => t.conditions.weatherSensitive === false);
+      
+      // 작업 배치
+      const tasksByDay = {};
+      const WORK_DAYS = [1, 2, 4, 5, 6];
+      let dayIdx = 0, hourOff = 0;
+      
+      // 시비 작업 먼저 확인 (관주시비 여부 파악)
+      let fertigationDays = []; // 관주시비가 있는 날
+      let fertigationWaterAmount = 0; // 관주시비에 사용되는 물량
+      if (weekData.fertilizer) {
+        const fert = weekData.fertilizer;
+        const fertType = fert.type || '시비';
+        const isFertigation = fertType.includes('관주');
+        
+        let fertDays = [1, 5];
+        if (fertType.includes('엽면') || fert.foliar) {
+          fertDays = [2, 4, 6];
+        }
+        
+        if (isFertigation) {
+          fertigationDays = fertDays;
+          // 관주시비 물량: 일일 관수량의 약 40% (EC 관리용)
+          const waterAmount = weekData.water?.amountTon || '3~5톤';
+          const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+          if (match) {
+            fertigationWaterAmount = parseFloat(match[1]) * 0.4;
+          }
+        }
+      }
+      
+      // 관수 작업 추가 (주간 계획 기반) - 물빠짐 적절함
+      if (weekData.water) {
+        const waterInterval = weekData.water.interval || '';
+        const waterMethod = weekData.water.method || '';
+        const waterAmount = weekData.water.amountTon || '';
+        
+        // 일일 총 관수량 파싱
+        let dailyWaterTotal = 3; // 기본값
+        const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+        if (match) {
+          dailyWaterTotal = parseFloat(match[1]);
+        }
+        
+        let waterDays = [2, 5];
+        if (waterInterval.includes('2~3일') || waterInterval.includes('2일')) {
+          waterDays = [1, 4, 6];
+        } else if (waterInterval.includes('3~4일') || waterInterval.includes('3일')) {
+          waterDays = [2, 5];
+        } else if (waterInterval.includes('5~7일') || waterInterval.includes('7일')) {
+          waterDays = [4];
+        }
+        
+        let waterHour = 9;
+        if (waterMethod.includes('오후') || waterMethod.includes('저녁')) {
+          waterHour = 16;
+        } else if (waterMethod.includes('이른 아침') || waterMethod.includes('6')) {
+          waterHour = 7;
+        }
+        
+        waterDays.forEach(day => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          
+          // 관주시비가 있는 날은 관수량 조정 (일일총량 - 관주시비물량)
+          const isFertigationDay = fertigationDays.includes(day);
+          let adjustedAmount = dailyWaterTotal;
+          let waterNote = '';
+          
+          if (isFertigationDay && fertigationWaterAmount > 0) {
+            adjustedAmount = Math.max(0, dailyWaterTotal - fertigationWaterAmount);
+            waterNote = ` (조정: 관주${fertigationWaterAmount.toFixed(1)}톤 제외)`;
+          }
+          
+          if (adjustedAmount > 0) {
+            tasksByDay[day].unshift({
+              text: `💧 관수 (${adjustedAmount.toFixed(1)}톤)${waterNote}`,
+              type: 'WATER',
+              isWater: true,
+              isFertigationDay: isFertigationDay,
+              conditions: { weatherSensitive: true, duration: 1 },
+              startHour: waterHour,
+              endHour: waterHour + 1
+            });
+          }
+        });
+      }
+      
+      // 시비 작업 추가 (주간 계획 기반)
+      if (weekData.fertilizer) {
+        const fert = weekData.fertilizer;
+        const fertType = fert.type || '시비';
+        const fertMain = fert.main || '';
+        const fertSub = fert.sub || '';
+        const fertFoliar = fert.foliar || '';
+        const fertEc = fert.ec || '';
+        const fertPoint = fert.point || '';
+        const fertNpk = fert.npk || '';
+        const isFertigation = fertType.includes('관주');
+        const waterAmount = weekData.water?.amountTon || '';
+        
+        // 시비는 주 1~2회 (월, 금)
+        let fertDays = [1, 5]; // 월, 금
+        if (fertType.includes('엽면') || fertFoliar) {
+          fertDays = [2, 4, 6]; // 엽면시비는 화, 목, 토
+        }
+        
+        // 시비 시간 (오전 10시)
+        const fertHour = 10;
+        
+        // 관주시비 물량: 일일 관수량의 40% (EC 관리/비료 희석용)
+        let fertigationWater = 0;
+        let dailyTotal = 0;
+        if (isFertigation && waterAmount) {
+          const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+          if (match) {
+            dailyTotal = parseFloat(match[1]);
+            fertigationWater = dailyTotal * 0.4;
+          }
+        }
+        
+        // 상세 내용 구성
+        const fertDetail = [
+          fertMain ? `📌 ${fertMain}` : '',
+          fertSub ? `➕ ${fertSub}` : '',
+          fertFoliar ? `🍃 엽면: ${fertFoliar}` : '',
+          fertEc ? `⚡ EC: ${fertEc}` : '',
+          fertPoint ? `✓ ${fertPoint}` : '',
+          fertNpk ? fertNpk : '',
+          isFertigation ? `💧 관주시비 물량: ${fertigationWater.toFixed(1)}톤 (40%)` : '',
+          isFertigation ? `💧 추가 관수: ${(dailyTotal - fertigationWater).toFixed(1)}톤 (60%)` : '',
+          isFertigation ? `📊 일일 총량: ${dailyTotal}톤 (100%)` : ''
+        ].filter(x => x).join('\\n');
+        
+        fertDays.forEach((day, idx) => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          tasksByDay[day].push({
+            text: isFertigation ? `🧪💧 관주시비 (${fertigationWater.toFixed(1)}톤)` : `🧪 ${fertType} (${fertMain.substring(0, 10)}${fertMain.length > 10 ? '...' : ''})`,
+            type: 'FERTILIZER',
+            isFertilizer: true,
+            isFertigation: isFertigation,
+            detail: fertDetail,
+            conditions: { weatherSensitive: true, duration: 1 },
+            startHour: fertHour + idx,
+            endHour: fertHour + idx + 1
+          });
+        });
+      }
+      
+      [...weatherSensitive, ...weatherIndependent].forEach(task => {
+        const targetDay = WORK_DAYS[dayIdx % WORK_DAYS.length];
+        if (!tasksByDay[targetDay]) tasksByDay[targetDay] = [];
+        const startHour = 9 + (hourOff * 2);
+        const duration = task.conditions.duration || 2;
+        tasksByDay[targetDay].push({ ...task, startHour, endHour: startHour + duration });
+        hourOff++;
+        if (hourOff >= 3) { hourOff = 0; dayIdx++; }
+      });
+      
+      // PF농법 작업 추가 (발아/개화 기준)
+      // 발아: 5~6주차 (2/25), 개화: 11주차 (4/3)
+      const PF_SCHEDULE = {
+        1: { timing: '발아 45일전', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        2: { timing: '발아 30일전', pf: 'PF-2', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        4: { timing: '발아 15일전', pf: 'PF-4', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        6: { timing: '발아', pf: 'PF-4', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        9: { timing: '개화 15일전', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        11: { timing: '개화', pf: 'PF-2', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        13: { timing: '개화 15일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        15: { timing: '개화 30일후', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        17: { timing: '개화 45일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        18: { timing: '개화 50일후', pf: 'PF-2', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        20: { timing: '개화 65일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        22: { timing: '개화 80일후', pf: 'PF-2', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        24: { timing: '개화 95일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' }
+      };
+      
+      if (PF_SCHEDULE[weekNo]) {
+        const pf = PF_SCHEDULE[weekNo];
+        const pfDay = 4; // 목요일
+        const pfHour = 14; // 오후 2시
+        
+        const pfDetail = [
+          `📅 시기: ${pf.timing}`,
+          `🦠 ${pf.pf}: ${pf.pfAmount}`,
+          `📦 ${pf.kit}: ${pf.kitAmount}`,
+          ``,
+          `📋 사용 방법:`,
+          `  • ${pf.pf}와 ${pf.kit} 혼합 사용`,
+          `  • 물 200L당 희석`,
+          `  • 토양 관주 또는 엽면 살포`,
+          ``,
+          `💡 PF농법 효과:`,
+          `  • 토양 미생물 활성화`,
+          `  • 뿌리 발달 촉진`,
+          `  • 병해 저항성 강화`,
+          `  • 당도 및 품질 향상`
+        ].join('\\n');
+        
+        if (!tasksByDay[pfDay]) tasksByDay[pfDay] = [];
+        tasksByDay[pfDay].push({
+          text: `🦠 PF농법 (${pf.pf} ${pf.pfAmount})`,
+          type: 'PF',
+          isPF: true,
+          detail: pfDetail,
+          conditions: { weatherSensitive: true, duration: 1 },
+          startHour: pfHour,
+          endHour: pfHour + 1
+        });
+      }
+      
+      // 약제 살포 작업 추가 (2주에 1회, 짝수 주차에 배치)
+      if (weekData.pest && weekNo % 2 === 0) {
+        const pest = weekData.pest;
+        const sprayDrug = pest.spray || '예방 약제';
+        const watchList = pest.watch?.join(', ') || '-';
+        const riskLevel = pest.risk || 'LOW';
+        const condition = pest.condition || '-';
+        const prevention = pest.prevention || '-';
+        
+        // 적정 온도/습도 조건: 15~28°C, 습도 50~70%
+        // 화요일 오전 10시 배치 (이슬 마른 후, 고온 전)
+        const sprayDay = 2; // 화요일
+        const sprayHour = 10;
+        
+        // 약제 정보 상세
+        const sprayDetail = [
+          `🎯 주의 병해충: ${watchList}`,
+          `⚠️ 위험도: ${riskLevel}`,
+          `🌡️ 발생 조건: ${condition}`,
+          `🛡️ 예방: ${prevention}`,
+          `💊 권장 약제: ${sprayDrug}`,
+          ``,
+          `📋 살포 조건:`,
+          `  • 온도: 15~28°C`,
+          `  • 습도: 50~70%`,
+          `  • 시간: 이슬 마른 후 (오전 9~11시)`,
+          `  • 바람: 약한 바람 (3m/s 이하)`,
+          ``,
+          `📦 희석 배율 (일반 기준):`,
+          `  • 살균제: 1,000~2,000배`,
+          `  • 살충제: 1,000~1,500배`,
+          `  • 진딧물: 2,000배`,
+          `  • 응애류: 1,500배`
+        ].join('\\n');
+        
+        if (!tasksByDay[sprayDay]) tasksByDay[sprayDay] = [];
+        tasksByDay[sprayDay].push({
+          text: `🧴 약제살포 (${sprayDrug.substring(0, 8)}${sprayDrug.length > 8 ? '...' : ''})`,
+          type: 'SPRAY',
+          isSpray: true,
+          detail: sprayDetail,
+          conditions: { weatherSensitive: true, duration: 2 },
+          startHour: sprayHour,
+          endHour: sprayHour + 2
+        });
+      }
+      
+      // 습도관리 작업 추가 (연동하우스 기준)
+      const HUMIDITY_PHASES = {
+        dormant: { weeks: [1,2,3,4], name: '휴면기', humidity: '60-70%', mode: '최소환기', note: '동해방지' },
+        budding: { weeks: [5,6,7,8], name: '발아기', humidity: '70-80%', mode: '결로방지', note: '새벽환기 필수' },
+        shooting: { weeks: [9,10,11,12,13,14], name: '신초생장기', humidity: '60-70%', mode: '적극환기', note: '웃자람 방지' },
+        flowering: { weeks: [15,16,17], name: '개화기', humidity: '50-60%', mode: '필수환기', note: '화진 방지!' },
+        fruitGrowth: { weeks: [18,19,20,21,22,23,24], name: '과립비대기', humidity: '60-70%', mode: '열과방지', note: '급변 주의' },
+        coloring: { weeks: [25,26,27,28,29,30], name: '착색기', humidity: '50-60%', mode: '당도향상', note: '저습도 유지' },
+        harvest: { weeks: [31,32,33,34,35,36], name: '수확기', humidity: '50-60%', mode: '품질유지', note: '결로 방지' },
+        postHarvest: { weeks: [37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52], name: '수확후', humidity: '60-70%', mode: '최소환기', note: '월동 준비' }
+      };
+      
+      let humidityInfo = null;
+      for (const [phase, info] of Object.entries(HUMIDITY_PHASES)) {
+        if (info.weeks.includes(weekNo)) {
+          humidityInfo = info;
+          break;
+        }
+      }
+      
+      if (humidityInfo) {
+        const humidityDetail = [
+          `📊 생육단계: ${humidityInfo.name}`,
+          `💧 적정습도: ${humidityInfo.humidity}`,
+          `🌬️ 환기모드: ${humidityInfo.mode}`,
+          `⚠️ 주의: ${humidityInfo.note}`,
+          ``,
+          `📋 시간대별 환기 (연동하우스):`,
+          `  06-08시 | 15°C↑,80%↑ → 환기팬,측창10%`,
+          `  09-11시 | 20°C↑,70%↑ → 측창30%,천창개방`,
+          `  12-15시 | 25°C↑ → 측창50%,환기팬`,
+          `  16-18시 | 20°C↓ → 측창20%,천창폐쇄`,
+          `  야간 | 85%↑ → 환기팬 간헐가동`,
+          ``,
+          `🚨 즉시조치: 80%↑→즉시환기, 결로→일출30분전`
+        ].join('\\n');
+        
+        // 월,목에 습도관리 점검
+        [1, 4].forEach(day => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          tasksByDay[day].push({
+            text: `🌬️ 습도관리 (${humidityInfo.humidity})`,
+            type: 'HUMIDITY',
+            isHumidity: true,
+            detail: humidityDetail,
+            conditions: { weatherSensitive: true, duration: 1 },
+            startHour: 9,
+            endHour: 10
+          });
+        });
+      }
+      
+      // 사용자가 이동한 작업 적용
+      applyTaskMoveOverrides(tasksByDay, weekNo);
+      
+      // 요일별 기후 변동 함수 (같은 주차 내에서도 요일별로 ±1~2°C 변화)
+      function getDayVariation(dayIdx) {
+        const variations = [-1, 1, 2, 0, -1, 1, 0]; // 일~토 변동값
+        return variations[dayIdx] || 0;
+      }
+      function getHumidityVariation(dayIdx) {
+        const variations = [2, -2, -3, 0, 1, -1, 2]; // 일~토 습도 변동
+        return variations[dayIdx] || 0;
+      }
+      
+      // 주간 시작일 계산
+      const weekStartDate = WeeklyScheduler.getWeekStart();
+      
+      let html = '';
+      for (let d = 0; d < 7; d++) {
+        const isBlocked = d === 0 || d === 3;
+        const dayTasks = (tasksByDay[d] || []).sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
+        
+        // 해당 요일의 날짜 계산
+        const dayDate = new Date(weekStartDate);
+        dayDate.setDate(dayDate.getDate() + d);
+        const dayDateStr = `${dayDate.getMonth() + 1}/${dayDate.getDate()}`;
+        
+        // 요일별 기후 데이터 (변동 적용) - 일출~일몰 6등분
+        const tempVar = getDayVariation(d);
+        const humVar = getHumidityVariation(d);
+        
+        // 일출/일몰 시간 (월별)
+        const sunTimes = WeeklyScheduler.getSunTimes(dayDate);
+        const sunriseHour = Math.ceil(sunTimes.rise);  // 일출 시간 올림
+        const sunsetHour = Math.floor(sunTimes.set);   // 일몰 시간 내림
+        
+        // 일출~일몰을 6등분하여 6개 시간대 생성
+        const hours = [];
+        const dayLength = sunsetHour - sunriseHour;
+        const interval = dayLength / 5; // 6개 포인트 = 5개 간격
+        for (let i = 0; i < 6; i++) {
+          hours.push(Math.round(sunriseHour + interval * i));
+        }
+        
+        const hourlyData = hours.map(hr => {
+          const base = climate.hourly.find(h => h.hour === hr) || climate.hourly.find(h => Math.abs(h.hour - hr) <= 1) || climate.hourly[Math.floor((hr - 6) / 3)];
+          return {
+            hour: hr,
+            temp: (base?.temp || 0) + tempVar,
+            humidity: Math.max(0, Math.min(100, (base?.humidity || 0) + humVar))
+          };
+        });
+        
+        // 온도에 따른 색상 (영하=파랑, 영상=빨강)
+        const getTempColor = (temp) => {
+          if (temp <= -10) return '#1e3a8a';      // 매우 추움: 진한 파랑
+          if (temp <= -5) return '#1d4ed8';       // 많이 추움: 파랑
+          if (temp <= 0) return '#3b82f6';        // 추움: 밝은 파랑
+          if (temp <= 5) return '#f87171';        // 쌀쌀: 연한 빨강
+          if (temp <= 10) return '#ef4444';       // 선선: 빨강
+          if (temp <= 15) return '#dc2626';       // 보통: 진한 빨강
+          if (temp <= 20) return '#b91c1c';       // 따뜻: 더 진한 빨강
+          if (temp <= 28) return '#991b1b';       // 더움: 어두운 빨강
+          if (temp <= 33) return '#7f1d1d';       // 매우 더움: 매우 진한 빨강
+          return '#450a0a';                        // 폭염: 가장 진한 빨강
+        };
+        
+        html += `
+          <div class="wsc-day ${isBlocked ? 'blocked' : ''}" 
+               ondragover="handleDragOver(event)" 
+               ondragleave="handleDragLeave(event)" 
+               ondrop="handleDrop(event, ${d}, ${weekNo})">
+            <div class="wsc-header">
+              <div class="wsc-dayname">${DAYS_FULL[d]}</div>
+              <div class="wsc-date" style="font-size:10px; color:#fef08a; margin-top:-2px;">${dayDateStr}</div>
+              ${!isBlocked ? `
+                <span class="wsc-badge">5년평균</span>
+                <div class="wsc-hourly-scroll">
+                  ${hourlyData.map(h => `
+                    <div class="wsc-hourly-item">
+                      <span class="wsc-h-time">${h.hour}시</span>
+                      <span class="wsc-h-temp" style="color:${getTempColor(h.temp)}">${h.temp}°</span>
+                      <span class="wsc-h-hum">💧${h.humidity}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : '<div class="wsc-blocked-label">🚫 휴무</div>'}
+            </div>
+            ${!isBlocked ? `
+              <div class="wsc-tasks">
+                ${dayTasks.length === 0 ? '<div class="wsc-no-task">작업 없음<div class="drag-hint">드래그하여 이동</div></div>' :
+                  dayTasks.map((t, idx) => {
+                    const taskId = t.type + '_' + idx;
+                    // 영구 삭제된 작업은 표시하지 않음
+                    if (isTaskPermanentlyDeleted(weekNo, taskId)) return '';
+                    const taskState = getTaskState(weekNo, d, taskId);
+                    const statusClass = taskState.status === 'completed' ? 'completed' : (taskState.status === 'deleted' ? 'deleted' : '');
+                    const taskTextEscaped = (t.text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    return `
+                    <div class="wsc-task ${t.isWater ? 'water' : (t.isFertilizer ? 'fertilizer' : (t.isSpray ? 'spray' : (t.isPF ? 'pf' : (t.isHumidity ? 'humidity' : (t.conditions.weatherSensitive !== false ? 'ws' : 'wi')))))} ${statusClass}" 
+                         draggable="true"
+                         ondragstart="handleDragStart(event, '${taskId}', '${taskTextEscaped}', ${d}, ${weekNo})"
+                         ondragend="handleDragEnd(event)"
+                         ${t.detail ? `onclick="toggleTaskDetail(this)"` : ''}>
+                      <div class="wsc-task-time">⏰ ${t.startHour}:00~${t.endHour}:00</div>
+                      <div class="wsc-task-name">${t.text}${t.detail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
+                      <div class="wsc-task-cond" style="color:${t.isWater ? '#38bdf8' : t.isFertilizer ? '#22c55e' : t.isSpray ? '#f59e0b' : t.isPF ? '#8b5cf6' : t.isHumidity ? '#06b6d4' : t.conditions.weatherSensitive !== false ? '#fbbf24' : '#64748b'}">
+                        ${t.isWater ? '💧 관수 작업' : t.isFertilizer ? '🧪 시비 작업' : t.isSpray ? '🧴 약제 살포' : t.isPF ? '🦠 PF농법' : t.isHumidity ? '🌬️ 환기/습도' : t.conditions.weatherSensitive !== false ? '🌡️' + (hourlyData.find(h => h.hour === 12)?.temp || '-') + '°C 💧' + (hourlyData.find(h => h.hour === 12)?.humidity || '-') + '%' : '📦 날씨무관'}
+                      </div>
+                      ${t.detail ? `<div class="wsc-task-detail">${t.detail.replace(/\\n/g, '<br>')}</div>` : ''}
+                      <div class="task-actions">
+                        ${taskState.status === 'deleted' ? `
+                          <button class="task-action-btn restore" onclick="restoreTask(${weekNo}, ${d}, '${taskId}', '${taskTextEscaped}', event)">🔄 복원</button>
+                          <button class="task-action-btn permanent-delete" onclick="permanentDeleteTask(${weekNo}, ${d}, '${taskId}', '${taskTextEscaped}', event)">❌ 완전삭제</button>
+                        ` : `
+                          <button class="task-action-btn complete" onclick="completeTask(${weekNo}, ${d}, '${taskId}', '${taskTextEscaped}', event)">${taskState.status === 'completed' ? '↩️ 취소' : '✅ 완료'}</button>
+                          <button class="task-action-btn delete" onclick="deleteTask(${weekNo}, ${d}, '${taskId}', '${taskTextEscaped}', event)">🗑️ 삭제</button>
+                        `}
+                      </div>
+                    </div>
+                  `}).join('')
+                }
+                <div class="drag-hint">드래그하여 이동</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
     }
     
     // 현재 주차 자동 열기
@@ -606,6 +2422,8 @@
       const items = document.querySelectorAll('.week-item');
       if (currentWeekNo >= 1 && currentWeekNo <= 52) {
         items[currentWeekNo - 1]?.classList.add('open', 'current');
+        // 스케줄러 렌더링
+        setTimeout(() => renderWeekSchedulerCalendar(currentWeekNo), 100);
       }
     }
     
@@ -648,20 +2466,19 @@
         const todayIcon = getWeatherIcon(current.weatherCode);
         const tomorrowIcon = getWeatherIcon(tomorrow.hourly[4].weatherCode);
         
-        // 온도별 색상 (추울수록 적색, 더울수록 파란색)
+        // 온도별 색상 (영하=파랑, 영상=빨강)
         const getTempColor = (temp) => {
           const t = parseInt(temp);
-          if (t <= -10) return '#ef4444'; // 매우 추움 - 빨강
-          if (t <= -5) return '#f97316';  // 많이 추움 - 주황빨강
-          if (t <= 0) return '#fb923c';   // 추움 - 주황
-          if (t <= 5) return '#fbbf24';   // 쌀쌀 - 노랑
-          if (t <= 10) return '#facc15';  // 선선 - 밝은노랑
-          if (t <= 15) return '#a3e635';  // 적당 - 연두
-          if (t <= 20) return '#4ade80';  // 따뜻 - 초록
-          if (t <= 25) return '#22d3ee';  // 온화 - 하늘
-          if (t <= 30) return '#38bdf8';  // 더움 - 파랑
-          if (t <= 35) return '#3b82f6';  // 많이 더움 - 진파랑
-          return '#6366f1';               // 매우 더움 - 보라파랑
+          if (t <= -10) return '#1e3a8a';  // 매우 추움: 진한 파랑
+          if (t <= -5) return '#1d4ed8';   // 많이 추움: 파랑
+          if (t <= 0) return '#3b82f6';    // 추움: 밝은 파랑
+          if (t <= 5) return '#f87171';    // 쌀쌀: 연한 빨강
+          if (t <= 10) return '#ef4444';   // 선선: 빨강
+          if (t <= 15) return '#dc2626';   // 보통: 진한 빨강
+          if (t <= 20) return '#b91c1c';   // 따뜻: 더 진한 빨강
+          if (t <= 28) return '#991b1b';   // 더움: 어두운 빨강
+          if (t <= 33) return '#7f1d1d';   // 매우 더움: 매우 진한 빨강
+          return '#450a0a';               // 폭염: 가장 진한 빨강
         };
         
         // 3시간 데이터를 2시간 단위로 보간
@@ -727,7 +2544,7 @@
             <!-- 오늘 -->
             <div class="weather-day">
               <div class="day-header">
-                <span class="day-label">오늘 (${today.date.slice(5)})</span>
+                <span class="day-label">오늘 (${today.date.slice(5).replace('-', '/')})</span>
                 <span class="day-icon">${todayIcon}</span>
                 <span class="day-temp">${today.mintempC}° ~ ${today.maxtempC}°C</span>
                 <span class="day-desc">${current.lang_ko?.[0]?.value || current.weatherDesc[0].value}</span>
@@ -742,7 +2559,7 @@
             <!-- 내일 -->
             <div class="weather-day">
               <div class="day-header">
-                <span class="day-label">내일 (${tomorrow.date.slice(5)})</span>
+                <span class="day-label">내일 (${tomorrow.date.slice(5).replace('-', '/')})</span>
                 <span class="day-icon">${tomorrowIcon}</span>
                 <span class="day-temp">${tomorrow.mintempC}° ~ ${tomorrow.maxtempC}°C</span>
                 <span class="day-desc">${tomorrow.hourly[4].lang_ko?.[0]?.value || tomorrow.hourly[4].weatherDesc[0].value}</span>
@@ -761,10 +2578,1687 @@
       }
     }
     
+    // =============================================
+    // 주간 스케줄러 기능
+    // =============================================
+    
+    function toggleScheduler() {
+      document.getElementById('schedulerPanel').classList.toggle('open');
+    }
+    
+    function toggleCollapsible(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.classList.toggle('open');
+      }
+    }
+    
+    function toggleTaskDetail(element) {
+      element.classList.toggle('open');
+    }
+    
+    // 드래그 앤 드롭 관련 변수 및 함수
+    let draggedTask = null;
+    let draggedTaskData = null;
+    let dragSourceDay = null;
+    let dragSourceWeek = null;
+    
+    // 사용자 작업 이동 저장소
+    let taskMoveOverrides = JSON.parse(localStorage.getItem('taskMoveOverrides') || '{}');
+    
+    function saveTaskMoveOverrides() {
+      localStorage.setItem('taskMoveOverrides', JSON.stringify(taskMoveOverrides));
+    }
+    
+    function handleDragStart(e, taskId, taskText, sourceDay, weekNo) {
+      draggedTask = e.target;
+      draggedTaskData = { taskId, taskText, sourceDay, weekNo };
+      dragSourceDay = sourceDay;
+      dragSourceWeek = weekNo;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', JSON.stringify({ taskId, taskText, sourceDay, weekNo }));
+    }
+    
+    function handleDragEnd(e) {
+      if (draggedTask) {
+        draggedTask.classList.remove('dragging');
+      }
+      document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      draggedTask = null;
+      draggedTaskData = null;
+      dragSourceDay = null;
+      dragSourceWeek = null;
+    }
+    
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const dayColumn = e.target.closest('.wsc-day, .day-column-full, .day-col-full');
+      if (dayColumn && !dayColumn.classList.contains('blocked')) {
+        dayColumn.classList.add('drag-over');
+      }
+    }
+    
+    function handleDragLeave(e) {
+      const dayColumn = e.target.closest('.wsc-day, .day-column-full, .day-col-full');
+      if (dayColumn) {
+        dayColumn.classList.remove('drag-over');
+      }
+    }
+    
+    function handleDrop(e, targetDay, weekNo) {
+      e.preventDefault();
+      const dayColumn = e.target.closest('.wsc-day, .day-column-full, .day-col-full');
+      if (dayColumn) {
+        dayColumn.classList.remove('drag-over');
+      }
+      
+      if (!draggedTaskData) return;
+      
+      // 일요일(0), 수요일(3)은 드롭 불가
+      if (targetDay === 0 || targetDay === 3) {
+        alert('일요일과 수요일은 작업 불가일입니다.');
+        return;
+      }
+      
+      // 같은 날이면 무시
+      if (draggedTaskData.sourceDay === targetDay && draggedTaskData.weekNo === weekNo) {
+        return;
+      }
+      
+      // 작업 이동 저장
+      const moveKey = `${weekNo}_${draggedTaskData.taskId}`;
+      taskMoveOverrides[moveKey] = {
+        taskId: draggedTaskData.taskId,
+        taskText: draggedTaskData.taskText,
+        originalDay: draggedTaskData.sourceDay,
+        newDay: targetDay,
+        weekNo: weekNo
+      };
+      saveTaskMoveOverrides();
+      
+      // 스케줄러 다시 렌더링
+      const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+      alert(`작업이 ${dayNames[draggedTaskData.sourceDay]}요일에서 ${dayNames[targetDay]}요일로 이동되었습니다.`);
+      
+      loadScheduler();
+      renderFullYearScheduler();
+    }
+    
+    function getMovedDay(weekNo, taskId, originalDay) {
+      const moveKey = `${weekNo}_${taskId}`;
+      if (taskMoveOverrides[moveKey]) {
+        return taskMoveOverrides[moveKey].newDay;
+      }
+      return originalDay;
+    }
+    
+    function resetTaskMoves() {
+      if (confirm('모든 작업 이동 설정을 초기화하시겠습니까?')) {
+        taskMoveOverrides = {};
+        saveTaskMoveOverrides();
+        loadScheduler();
+        renderFullYearScheduler();
+        alert('작업 이동 설정이 초기화되었습니다.');
+      }
+    }
+    
+    // 작업 상태 저장소 (완료, 삭제)
+    let taskStates = JSON.parse(localStorage.getItem('taskStates') || '{}');
+    
+    // 영구 삭제된 작업 저장소 (다시 나타나지 않음)
+    let permanentlyDeletedTasks = JSON.parse(localStorage.getItem('permanentlyDeletedTasks') || '{}');
+    
+    function savePermanentlyDeletedTasks() {
+      localStorage.setItem('permanentlyDeletedTasks', JSON.stringify(permanentlyDeletedTasks));
+    }
+    
+    function isTaskPermanentlyDeleted(weekNo, taskId) {
+      // weekNo와 taskId 조합으로 확인 (dayIdx는 이동될 수 있으므로 제외)
+      const key = `${weekNo}_${taskId}`;
+      return permanentlyDeletedTasks[key] === true;
+    }
+    
+    function addToPermanentlyDeleted(weekNo, taskId, taskText) {
+      const key = `${weekNo}_${taskId}`;
+      permanentlyDeletedTasks[key] = true;
+      savePermanentlyDeletedTasks();
+    }
+    
+    function saveTaskStates() {
+      localStorage.setItem('taskStates', JSON.stringify(taskStates));
+    }
+    
+    function getTaskStateKey(weekNo, dayIdx, taskId) {
+      return `${weekNo}_${dayIdx}_${taskId}`;
+    }
+    
+    function getTaskState(weekNo, dayIdx, taskId) {
+      const key = getTaskStateKey(weekNo, dayIdx, taskId);
+      return taskStates[key] || { status: 'pending' };
+    }
+    
+    function setTaskState(weekNo, dayIdx, taskId, taskText, status) {
+      const key = getTaskStateKey(weekNo, dayIdx, taskId);
+      taskStates[key] = { 
+        status: status, 
+        taskText: taskText,
+        weekNo: weekNo,
+        dayIdx: dayIdx,
+        taskId: taskId,
+        updatedAt: new Date().toISOString()
+      };
+      saveTaskStates();
+    }
+    
+    function completeTask(weekNo, dayIdx, taskId, taskText, event) {
+      event.stopPropagation();
+      const currentState = getTaskState(weekNo, dayIdx, taskId);
+      if (currentState.status === 'completed') {
+        setTaskState(weekNo, dayIdx, taskId, taskText, 'pending');
+      } else {
+        setTaskState(weekNo, dayIdx, taskId, taskText, 'completed');
+      }
+      loadScheduler();
+      renderFullYearScheduler();
+    }
+    
+    function deleteTask(weekNo, dayIdx, taskId, taskText, event) {
+      event.stopPropagation();
+      if (confirm('이 작업을 삭제하시겠습니까?')) {
+        setTaskState(weekNo, dayIdx, taskId, taskText, 'deleted');
+        loadScheduler();
+        renderFullYearScheduler();
+      }
+    }
+    
+    function restoreTask(weekNo, dayIdx, taskId, taskText, event) {
+      event.stopPropagation();
+      setTaskState(weekNo, dayIdx, taskId, taskText, 'pending');
+      loadScheduler();
+      renderFullYearScheduler();
+    }
+    
+    function permanentDeleteTask(weekNo, dayIdx, taskId, taskText, event) {
+      event.stopPropagation();
+      if (confirm('이 작업을 완전히 삭제하시겠습니까?\n(복원 불가능, 프로그램 재시작 후에도 나타나지 않음)')) {
+        const key = weekNo + '_' + dayIdx + '_' + taskId;
+        delete taskStates[key];
+        saveTaskStates();
+        
+        // 이동된 작업에서도 삭제
+        delete taskMoveOverrides[key];
+        saveTaskMoveOverrides();
+        
+        // 이월된 작업에서도 삭제
+        const carriedKey = weekNo + '_' + taskId;
+        delete carriedOverTasks[carriedKey];
+        saveCarriedOverTasks();
+        
+        // 영구 삭제 목록에 추가 (다시 나타나지 않음)
+        addToPermanentlyDeleted(weekNo, taskId, taskText);
+        
+        loadScheduler();
+        renderFullYearScheduler();
+      }
+    }
+    
+    // 이월된 작업 (미완료 작업을 다음 주로)
+    let carriedOverTasks = JSON.parse(localStorage.getItem('carriedOverTasks') || '{}');
+    
+    function saveCarriedOverTasks() {
+      localStorage.setItem('carriedOverTasks', JSON.stringify(carriedOverTasks));
+    }
+    
+    function getCarriedOverTasksForWeek(weekNo) {
+      return carriedOverTasks[weekNo] || [];
+    }
+    
+    function carryOverIncompleteTasks() {
+      const today = new Date();
+      const currentWeekNo = getWeekNumber(today);
+      
+      // 지난 주의 미완료 작업들을 찾아서 이번 주로 이월
+      const previousWeekNo = currentWeekNo - 1;
+      if (previousWeekNo < 1) return;
+      
+      const incompleteTasks = [];
+      
+      // 이전 주의 모든 작업 상태 확인
+      Object.keys(taskStates).forEach(key => {
+        const state = taskStates[key];
+        if (state.weekNo === previousWeekNo && state.status === 'pending') {
+          incompleteTasks.push({
+            taskText: state.taskText,
+            originalWeekNo: state.weekNo,
+            originalDayIdx: state.dayIdx,
+            taskId: state.taskId
+          });
+        }
+      });
+      
+      if (incompleteTasks.length > 0) {
+        // 현재 주에 이월 작업 추가
+        if (!carriedOverTasks[currentWeekNo]) {
+          carriedOverTasks[currentWeekNo] = [];
+        }
+        
+        incompleteTasks.forEach(task => {
+          // 중복 체크
+          const exists = carriedOverTasks[currentWeekNo].some(t => 
+            t.taskId === task.taskId && t.originalWeekNo === task.originalWeekNo
+          );
+          if (!exists) {
+            carriedOverTasks[currentWeekNo].push(task);
+          }
+        });
+        
+        saveCarriedOverTasks();
+      }
+    }
+    
+    function resetAllTaskStates() {
+      if (confirm('모든 작업 상태 (완료/삭제)를 초기화하시겠습니까?')) {
+        taskStates = {};
+        carriedOverTasks = {};
+        saveTaskStates();
+        saveCarriedOverTasks();
+        loadScheduler();
+        renderFullYearScheduler();
+        alert('모든 작업 상태가 초기화되었습니다.');
+      }
+    }
+    
+    function getWeekNumber(date) {
+      // 열가둠 시작일 (1주차 기준) - 입력 필드에서 가져오거나 기본값 사용
+      const heatStartInput = document.getElementById('heatStart');
+      const heatStart = heatStartInput ? new Date(heatStartInput.value) : new Date(date.getFullYear(), 0, 19);
+      const days = Math.floor((date - heatStart) / (24 * 60 * 60 * 1000));
+      return days < 0 ? 0 : Math.floor(days / 7) + 1;
+    }
+    
+    // 수동으로 이월 작업 실행
+    function carryOverManually() {
+      const today = new Date();
+      const currentWeekNo = getWeekNumber(today);
+      const previousWeekNo = currentWeekNo - 1;
+      
+      if (previousWeekNo < 1) {
+        alert('이전 주차가 없습니다.');
+        return;
+      }
+      
+      // 이전 주의 모든 작업 중 'pending' 상태인 작업 찾기
+      const incompleteTasks = [];
+      
+      Object.keys(taskStates).forEach(key => {
+        const state = taskStates[key];
+        if (state.weekNo === previousWeekNo && state.status === 'pending') {
+          incompleteTasks.push({
+            taskText: state.taskText,
+            originalWeekNo: state.weekNo,
+            originalDayIdx: state.dayIdx,
+            taskId: state.taskId
+          });
+        }
+      });
+      
+      // 이전 주에 기록되지 않은 작업들도 확인 (상태가 없으면 pending으로 간주)
+      // 이전 주의 모든 작업을 체크
+      const { WEEKLY_DATA } = window.ShineExpert;
+      const prevWeekData = WEEKLY_DATA[previousWeekNo];
+      if (prevWeekData && prevWeekData.tasks) {
+        prevWeekData.tasks.forEach((taskText, idx) => {
+          const taskId = 'GENERAL_' + idx;
+          const key = getTaskStateKey(previousWeekNo, 1, taskId);
+          if (!taskStates[key]) {
+            // 상태가 없으면 미완료로 간주하여 이월
+            incompleteTasks.push({
+              taskText: taskText,
+              originalWeekNo: previousWeekNo,
+              originalDayIdx: 1,
+              taskId: taskId
+            });
+          }
+        });
+      }
+      
+      if (incompleteTasks.length === 0) {
+        alert(`${previousWeekNo}주차의 미완료 작업이 없습니다.`);
+        return;
+      }
+      
+      if (!confirm(`${previousWeekNo}주차의 미완료 작업 ${incompleteTasks.length}건을 ${currentWeekNo}주차로 이월하시겠습니까?`)) {
+        return;
+      }
+      
+      // 현재 주에 이월 작업 추가
+      if (!carriedOverTasks[currentWeekNo]) {
+        carriedOverTasks[currentWeekNo] = [];
+      }
+      
+      let addedCount = 0;
+      incompleteTasks.forEach(task => {
+        // 중복 체크
+        const exists = carriedOverTasks[currentWeekNo].some(t => 
+          t.taskId === task.taskId && t.originalWeekNo === task.originalWeekNo
+        );
+        if (!exists) {
+          carriedOverTasks[currentWeekNo].push(task);
+          addedCount++;
+        }
+      });
+      
+      saveCarriedOverTasks();
+      loadScheduler();
+      renderFullYearScheduler();
+      alert(`${addedCount}건의 작업이 이월되었습니다.`);
+    }
+    
+    // 페이지 로드 시 이월 작업 확인
+    document.addEventListener('DOMContentLoaded', function() {
+      carryOverIncompleteTasks();
+    });
+    
+    function applyTaskMoveOverrides(tasksByDay, weekNo) {
+      // 이동된 작업들을 적용
+      const movedTasks = [];
+      
+      // 해당 주차의 모든 이동 설정 찾기
+      Object.keys(taskMoveOverrides).forEach(key => {
+        if (key.startsWith(weekNo + '_')) {
+          movedTasks.push(taskMoveOverrides[key]);
+        }
+      });
+      
+      // 각 이동 설정 적용
+      movedTasks.forEach(move => {
+        const originalDay = move.originalDay;
+        const newDay = move.newDay;
+        const taskId = move.taskId;
+        
+        // 원래 날짜에서 작업 찾기
+        if (tasksByDay[originalDay]) {
+          const taskIndex = tasksByDay[originalDay].findIndex((t, idx) => {
+            return (t.type + '_' + idx) === taskId;
+          });
+          
+          if (taskIndex !== -1) {
+            // 작업을 새 날짜로 이동
+            const task = tasksByDay[originalDay].splice(taskIndex, 1)[0];
+            if (!tasksByDay[newDay]) tasksByDay[newDay] = [];
+            tasksByDay[newDay].push(task);
+          }
+        }
+      });
+      
+      // 이월된 작업 추가 (이전 주에서 미완료된 작업)
+      const carriedTasks = getCarriedOverTasksForWeek(weekNo);
+      if (carriedTasks.length > 0) {
+        // 월요일(1)에 이월 작업 추가
+        if (!tasksByDay[1]) tasksByDay[1] = [];
+        
+        carriedTasks.forEach((ct, idx) => {
+          // 이미 완료되거나 삭제된 이월 작업은 제외
+          const ctState = getTaskState(weekNo, 1, `CARRIED_${idx}`);
+          if (ctState.status !== 'deleted') {
+            tasksByDay[1].push({
+              text: `📌 ${ct.taskText} (${ct.originalWeekNo}주차 이월)`,
+              type: 'CARRIED',
+              carriedOver: true,
+              originalWeekNo: ct.originalWeekNo,
+              conditions: { weatherSensitive: false },
+              startHour: 9,
+              endHour: 11
+            });
+          }
+        });
+      }
+      
+      return tasksByDay;
+    }
+    
+    async function loadScheduler() {
+      const location = document.getElementById('weatherLocation').value;
+      const { WEEKLY_DATA } = window.ShineExpert;
+      const weekNo = currentWeekNo || 1;
+      const weekData = WEEKLY_DATA[weekNo] || WEEKLY_DATA[1];
+      
+      try {
+        const result = await WeeklyScheduler.generateWeeklySchedule(weekData, location, weekNo);
+        
+        // 사용자 정의 작업 병합
+        result.scheduledTasks = mergeCustomTasksToSchedule(result.scheduledTasks);
+        
+        renderWeekCalendar(result);
+        renderExternalEvents();
+        renderCustomTasks();
+      } catch (error) {
+        console.error('스케줄러 로드 실패:', error);
+        document.getElementById('weekCalendar').innerHTML = 
+          '<div class="weather-loading">⚠️ 스케줄러 로드 실패</div>';
+      }
+    }
+    
+    function renderWeekCalendar(result) {
+      const container = document.getElementById('weekCalendar');
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      let html = '';
+      const unscheduled = [];
+      
+      // 7일 (일~토) 렌더링
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(result.weekStart);
+        date.setDate(date.getDate() + i);
+        const dayIndex = date.getDay();
+        const dateStr = WeeklyScheduler.formatDateFull(date);
+        const isBlocked = WeeklyScheduler.isBlockedDay(dayIndex);
+        const isToday = date.getTime() === today.getTime();
+        
+        // 해당 날짜의 날씨 (작년 데이터 기준 - 스케줄링용)
+        const dayWeather = result.fullWeatherByDate ? result.fullWeatherByDate[dateStr] : null;
+        const isHistorical = dayWeather && dayWeather.isHistorical;
+        
+        // 실시간 날씨 (참고용)
+        const realtimeWeather = result.realtimeWeatherData ? result.realtimeWeatherData[dateStr] : null;
+        
+        // 해당 날짜의 이상기후 알림
+        const dayAlerts = result.alertsByDate ? result.alertsByDate[dateStr] : [];
+        const hasAlert = dayAlerts && dayAlerts.length > 0;
+        const hasSevereAlert = dayAlerts && dayAlerts.some(a => 
+          a.type === 'EXTREME_HEAT' || a.type === 'HEAVY_RAIN' || a.type === 'LOCALIZED_STORM'
+        );
+        
+        // 해당 날짜의 작업들
+        const dayTasks = result.scheduledTasks.filter(t => t.date === dateStr);
+        
+        // 시간별 온도/습도 요약 (오전/오후)
+        let hourlyInfo = '';
+        if (dayWeather && dayWeather.hourly) {
+          const morning = dayWeather.hourly.find(h => h.hour === 9) || dayWeather.hourly[3];
+          const noon = dayWeather.hourly.find(h => h.hour === 12) || dayWeather.hourly[6];
+          const afternoon = dayWeather.hourly.find(h => h.hour === 15) || dayWeather.hourly[9];
+          
+          hourlyInfo = `
+            <div class="hourly-climate">
+              <div class="hourly-row" title="09시">
+                <span class="h-time">09</span>
+                <span class="h-temp">${morning?.temp || '-'}°</span>
+                <span class="h-humid">${morning?.humidity || '-'}%</span>
+              </div>
+              <div class="hourly-row" title="12시">
+                <span class="h-time">12</span>
+                <span class="h-temp">${noon?.temp || '-'}°</span>
+                <span class="h-humid">${noon?.humidity || '-'}%</span>
+              </div>
+              <div class="hourly-row" title="15시">
+                <span class="h-time">15</span>
+                <span class="h-temp">${afternoon?.temp || '-'}°</span>
+                <span class="h-humid">${afternoon?.humidity || '-'}%</span>
+              </div>
+            </div>
+          `;
+        }
+        
+        // 이상기후 알림 배지
+        let alertBadges = '';
+        if (hasAlert && !isBlocked) {
+          alertBadges = `
+            <div class="weather-alerts">
+              ${dayAlerts.map(a => `<span class="alert-badge ${a.type}">${a.name}</span>`).join('')}
+            </div>
+          `;
+          
+          // 가장 중요한 권고사항 표시
+          const mainAlert = dayAlerts[0];
+          if (mainAlert && mainAlert.recommendation) {
+            alertBadges += `<div class="alert-recommendation">💡 ${mainAlert.recommendation}</div>`;
+          }
+        }
+        
+        // 일출/일몰 시간 계산
+        const sunTimes = WeeklyScheduler.getSunTimes(date);
+        const sunriseHour = Math.ceil(sunTimes.rise);
+        const sunsetHour = Math.floor(sunTimes.set);
+        
+        // 일출~일몰을 6등분하여 6개 시간대 생성
+        const hours = [];
+        const dayLength = sunsetHour - sunriseHour;
+        const interval = dayLength / 5;
+        for (let i = 0; i < 6; i++) {
+          hours.push(Math.round(sunriseHour + interval * i));
+        }
+        
+        // 오늘부터 며칠 후인지 계산
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const targetDate = new Date(date);
+        targetDate.setHours(0, 0, 0, 0);
+        const daysDiff = Math.floor((targetDate - today) / (1000 * 60 * 60 * 24));
+        
+        // 오늘, 내일, 모레(0, 1, 2일 후)까지는 실시간, 그 이후는 5년 평균
+        const useRealtime = daysDiff >= 0 && daysDiff <= 2 && realtimeWeather && realtimeWeather.hourly;
+        
+        // 요일별 기후 변동 (5년 평균용)
+        const tempVariations = [-1, 1, 2, 0, -1, 1, 0]; // 일~토 온도 변동
+        const humVariations = [2, -2, -3, 0, 1, -1, 2]; // 일~토 습도 변동
+        const tempVar = tempVariations[dayIndex] || 0;
+        const humVar = humVariations[dayIndex] || 0;
+        
+        // 5년 평균 기후 데이터 가져오기
+        const climate = result.historicalClimate || WeeklyScheduler.getHistoricalClimate(currentWeekNo);
+        
+        // 시간별 데이터 생성
+        const hourlyDataForDisplay = hours.map(hr => {
+          let temp = 0, humidity = 0;
+          
+          if (useRealtime) {
+            // 실시간 날씨 사용 (오늘, 내일, 모레)
+            const found = realtimeWeather.hourly.find(h => h.hour === hr) || realtimeWeather.hourly.find(h => Math.abs(h.hour - hr) <= 1);
+            if (found) {
+              temp = found.temp || 0;
+              humidity = found.humidity || 0;
+            }
+          } else if (climate && climate.hourly) {
+            // 5년 평균 사용 (그 이후)
+            const base = climate.hourly.find(h => h.hour === hr) || climate.hourly.find(h => Math.abs(h.hour - hr) <= 1) || climate.hourly[Math.floor((hr - 6) / 3)];
+            if (base) {
+              temp = (base.temp || 0) + tempVar;
+              humidity = Math.max(0, Math.min(100, (base.humidity || 0) + humVar));
+            }
+          }
+          return { hour: hr, temp, humidity };
+        });
+        
+        // 배지 텍스트 결정
+        const badgeText = useRealtime ? '🔴실시간' : '5년평균';
+        
+        // 온도에 따른 색상
+        const getTempColorTop = (temp) => {
+          if (temp <= -10) return '#1e3a8a';
+          if (temp <= -5) return '#1d4ed8';
+          if (temp <= 0) return '#3b82f6';
+          if (temp <= 5) return '#f87171';
+          if (temp <= 10) return '#ef4444';
+          if (temp <= 15) return '#dc2626';
+          if (temp <= 20) return '#b91c1c';
+          if (temp <= 28) return '#991b1b';
+          if (temp <= 33) return '#7f1d1d';
+          return '#450a0a';
+        };
+        
+        html += `
+          <div class="wsc-day ${isBlocked ? 'blocked' : ''} ${isToday ? 'today' : ''} ${hasAlert ? 'has-alert' : ''} ${hasSevereAlert ? 'has-severe-alert' : ''}">
+            <div class="wsc-header">
+              <div class="wsc-dayname">${WeeklyScheduler.DAYS_FULL[dayIndex]}</div>
+              <div class="wsc-date" style="font-size:10px; color:#fef08a; margin-top:-2px;">${WeeklyScheduler.formatDate(date)}</div>
+              ${!isBlocked ? `
+                <span class="wsc-badge">${badgeText}</span>
+                <div class="wsc-hourly-scroll">
+                  ${hourlyDataForDisplay.map(h => `
+                    <div class="wsc-hourly-item">
+                      <span class="wsc-h-time">${h.hour}시</span>
+                      <span class="wsc-h-temp" style="color:${getTempColorTop(h.temp)}">${h.temp}°</span>
+                      <span class="wsc-h-hum">💧${h.humidity}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+                ${alertBadges}
+              ` : (isBlocked ? '<div class="wsc-blocked-label">🚫 휴무</div>' : '')}
+            </div>
+            ${!isBlocked ? `
+              <div class="wsc-tasks">
+                ${renderDayTasks(dayTasks)}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+      
+      // 배치 불가 작업 표시
+      const unscheduledTasks = result.scheduledTasks.filter(t => t.date === null);
+      const unscheduledSection = document.getElementById('unscheduledSection');
+      const unscheduledContainer = document.getElementById('unscheduledTasks');
+      
+      if (unscheduledTasks.length > 0) {
+        unscheduledSection.style.display = 'block';
+        unscheduledContainer.innerHTML = unscheduledTasks.map(t => `
+          <div class="wsc-task" style="border-left-color:#ef4444; background:rgba(239,68,68,0.1);">
+            <div class="wsc-task-name">${t.task}</div>
+            <div class="wsc-task-cond" style="color:#ef4444;">${t.warning}</div>
+            ${t.blockedByAlerts ? `
+              <div style="font-size:7px; color:#fbbf24; margin-top:2px;">
+                ${t.blockedByAlerts.map(w => `💡 ${w.recommendation}`).join('<br>')}
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      } else {
+        unscheduledSection.style.display = 'none';
+      }
+    }
+    
+    function renderDayTasks(tasks) {
+      if (tasks.length === 0) {
+        return '<div class="wsc-no-task">작업 없음<div class="drag-hint">드래그하여 이동</div></div>';
+      }
+      
+      const weekNo = currentWeekNo || 1;
+      
+      // 시작 시간 순으로 정렬
+      const sortedTasks = [...tasks].sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
+      
+      let html = sortedTasks.map((t, idx) => {
+        const isWater = t.taskType === 'WATER';
+        const isFertilizer = t.taskType === 'FERTILIZER';
+        const isPF = t.taskType === 'PF';
+        const isSpray = t.taskType === 'SPRAY';
+        const isHumidity = t.taskType === 'HUMIDITY';
+        const hasDetail = t.detail && t.detail.length > 0;
+        
+        // 작업 상태 확인
+        const taskId = (t.taskType || 'GENERAL') + '_' + idx;
+        const dayIndex = t.dayIndex !== undefined ? t.dayIndex : new Date(t.date).getDay();
+        
+        // 영구 삭제된 작업은 표시하지 않음
+        if (isTaskPermanentlyDeleted(weekNo, taskId)) return '';
+        
+        const taskState = getTaskState(weekNo, dayIndex, taskId);
+        const statusClass = taskState.status === 'completed' ? 'completed' : (taskState.status === 'deleted' ? 'deleted' : '');
+        const taskTextEscaped = (t.task || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        // 작업 유형별 클래스
+        const typeClass = isWater ? 'water' : isFertilizer ? 'fertilizer' : isSpray ? 'spray' : isPF ? 'pf' : isHumidity ? 'humidity' : (t.weatherSensitive !== false ? 'ws' : 'wi');
+        
+        // 작업 조건 색상
+        const condColor = isWater ? '#38bdf8' : isFertilizer ? '#22c55e' : isSpray ? '#f59e0b' : isPF ? '#8b5cf6' : isHumidity ? '#06b6d4' : (t.weatherSensitive !== false ? '#fbbf24' : '#64748b');
+        
+        // 작업 조건 텍스트
+        let condText = '';
+        if (isWater) condText = '💧 관수 작업';
+        else if (isFertilizer) condText = '🧪 시비 작업';
+        else if (isSpray) condText = '🧴 약제 살포';
+        else if (isPF) condText = '🦠 PF농법';
+        else if (isHumidity) condText = '🌬️ 환기/습도';
+        else if (t.weatherSensitive !== false && t.weather) condText = `🌡️${t.weather.temp}°C 💧${t.weather.humidity}%`;
+        else condText = '📦 날씨무관';
+        
+        return `
+        <div class="wsc-task ${typeClass} ${statusClass}" ${hasDetail ? 'onclick="toggleTaskDetail(this)"' : ''}>
+          <div class="wsc-task-time">⏰ ${t.startHour}:00~${t.endHour}:00</div>
+          <div class="wsc-task-name">${t.task}${hasDetail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
+          <div class="wsc-task-cond" style="color:${condColor}">
+            ${condText}
+          </div>
+          ${hasDetail ? `<div class="wsc-task-detail">${t.detail.replace(/\\n/g, '<br>')}</div>` : ''}
+          <div class="task-actions">
+            ${taskState.status === 'deleted' ? `
+              <button class="task-action-btn restore" onclick="event.stopPropagation(); restoreTask(${weekNo}, ${dayIndex}, '${taskId}', '${taskTextEscaped}', event)">🔄 복원</button>
+              <button class="task-action-btn permanent-delete" onclick="event.stopPropagation(); permanentDeleteTask(${weekNo}, ${dayIndex}, '${taskId}', '${taskTextEscaped}', event)">❌ 완전삭제</button>
+            ` : `
+              <button class="task-action-btn complete" onclick="event.stopPropagation(); completeTask(${weekNo}, ${dayIndex}, '${taskId}', '${taskTextEscaped}', event)">${taskState.status === 'completed' ? '↩️ 취소' : '✅ 완료'}</button>
+              <button class="task-action-btn delete" onclick="event.stopPropagation(); deleteTask(${weekNo}, ${dayIndex}, '${taskId}', '${taskTextEscaped}', event)">🗑️ 삭제</button>
+            `}
+          </div>
+        </div>
+      `}).join('');
+      
+      html += '<div class="drag-hint">드래그하여 이동</div>';
+      return html;
+    }
+    
+    function renderExternalEvents() {
+      const events = WeeklyScheduler.loadExternalEvents();
+      const container = document.getElementById('eventList');
+      
+      if (events.length === 0) {
+        container.innerHTML = '<div style="color:#475569; font-size:9px;">등록된 외부 일정 없음</div>';
+        return;
+      }
+      
+      container.innerHTML = events.map(e => `
+        <div class="event-item">
+          <span>📅 ${e.date}</span>
+          <span>${e.startHour}:00~${e.endHour}:00</span>
+          <span style="color:#e2e8f0;">${e.name}</span>
+          <span class="event-delete" onclick="deleteExternalEvent(${e.id})">✕</span>
+        </div>
+      `).join('');
+    }
+    
+    function addExternalEvent() {
+      const name = document.getElementById('eventName').value.trim();
+      const date = document.getElementById('eventDate').value;
+      const startHour = parseInt(document.getElementById('eventStart').value);
+      const endHour = parseInt(document.getElementById('eventEnd').value);
+      
+      if (!name || !date) {
+        alert('일정명과 날짜를 입력해주세요.');
+        return;
+      }
+      
+      if (endHour <= startHour) {
+        alert('종료 시간은 시작 시간보다 커야 합니다.');
+        return;
+      }
+      
+      WeeklyScheduler.addExternalEvent({
+        name,
+        date,
+        startHour,
+        endHour
+      });
+      
+      // 입력 필드 초기화
+      document.getElementById('eventName').value = '';
+      
+      // 스케줄러 새로고침
+      loadScheduler();
+    }
+    
+    function deleteExternalEvent(id) {
+      WeeklyScheduler.removeExternalEvent(id);
+      loadScheduler();
+    }
+    
+    // 오늘 날짜로 외부 일정 날짜 기본값 설정
+    function initEventDatePicker() {
+      const today = new Date();
+      const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+      document.getElementById('eventDate').value = dateStr;
+      document.getElementById('customTaskDate').value = dateStr;
+    }
+    
+    // =============================================
+    // 사용자 정의 작업 관리
+    // =============================================
+    
+    let customTasks = [];
+    
+    function loadCustomTasks() {
+      const saved = localStorage.getItem('shineCustomTasks');
+      if (saved) {
+        customTasks = JSON.parse(saved);
+      }
+      renderCustomTasks();
+      return customTasks;
+    }
+    
+    function saveCustomTasks() {
+      localStorage.setItem('shineCustomTasks', JSON.stringify(customTasks));
+    }
+    
+    function addCustomTask() {
+      const name = document.getElementById('customTaskName').value.trim();
+      const date = document.getElementById('customTaskDate').value;
+      const startHour = parseInt(document.getElementById('customTaskStart').value);
+      const duration = parseInt(document.getElementById('customTaskDuration').value);
+      const type = document.getElementById('customTaskType').value;
+      
+      if (!name) {
+        alert('작업명을 입력해주세요.');
+        return;
+      }
+      if (!date) {
+        alert('날짜를 선택해주세요.');
+        return;
+      }
+      
+      const newTask = {
+        id: Date.now(),
+        name: name,
+        date: date,
+        startHour: startHour,
+        endHour: startHour + duration,
+        duration: duration,
+        weatherSensitive: type === 'weather',
+        isCustom: true
+      };
+      
+      customTasks.push(newTask);
+      saveCustomTasks();
+      renderCustomTasks();
+      
+      // 입력 필드 초기화
+      document.getElementById('customTaskName').value = '';
+      
+      // 스케줄러 새로고침
+      loadScheduler();
+    }
+    
+    function deleteCustomTask(id) {
+      customTasks = customTasks.filter(t => t.id !== id);
+      saveCustomTasks();
+      renderCustomTasks();
+      loadScheduler();
+    }
+    
+    function renderCustomTasks() {
+      const container = document.getElementById('customTaskList');
+      
+      if (customTasks.length === 0) {
+        container.innerHTML = '<div style="color:#64748b; font-size:9px; padding:4px;">등록된 사용자 작업 없음</div>';
+        return;
+      }
+      
+      container.innerHTML = customTasks.map(t => `
+        <div class="custom-task-item ${t.weatherSensitive ? 'weather-sensitive' : ''}">
+          <span style="color:#a855f7;">✏️</span>
+          <span>${t.date}</span>
+          <span>${t.startHour}:00~${t.endHour}:00</span>
+          <span style="color:#e2e8f0; font-weight:500;">${t.name}</span>
+          <span style="color:${t.weatherSensitive ? '#fbbf24' : '#94a3b8'}; font-size:8px;">
+            ${t.weatherSensitive ? '🌡️날씨고려' : '📦날씨무관'}
+          </span>
+          <span class="task-delete" onclick="deleteCustomTask(${t.id})">✕</span>
+        </div>
+      `).join('');
+    }
+    
+    // 사용자 작업을 스케줄러 결과에 포함
+    function mergeCustomTasksToSchedule(scheduledTasks) {
+      const merged = [...scheduledTasks];
+      
+      customTasks.forEach(ct => {
+        merged.push({
+          task: ct.name,
+          taskType: 'CUSTOM',
+          date: ct.date,
+          dayName: null,
+          startHour: ct.startHour,
+          endHour: ct.endHour,
+          weather: null,
+          weatherSensitive: ct.weatherSensitive,
+          isCustom: true
+        });
+      });
+      
+      return merged;
+    }
+    
+    // =============================================
+    // 작업별 연간 스케줄
+    // =============================================
+    
+    let taskYearlyScheduleOpen = false;
+    
+    function toggleTaskYearlySchedule() {
+      const panel = document.getElementById('taskYearlySchedule');
+      const content = document.getElementById('taskYearlyContent');
+      taskYearlyScheduleOpen = !taskYearlyScheduleOpen;
+      
+      if (taskYearlyScheduleOpen) {
+        panel.classList.add('open');
+        content.style.display = 'block';
+        renderTaskYearlySchedule();
+      } else {
+        panel.classList.remove('open');
+        content.style.display = 'none';
+      }
+    }
+    
+    function renderTaskYearlySchedule() {
+      const container = document.getElementById('taskYearlyGrid');
+      const filterType = document.getElementById('taskTypeFilter').value;
+      const { WEEKLY_DATA } = window.ShineExpert;
+      
+      // 작업 유형별 아이콘
+      const taskIcons = {
+        GA: '🧪',
+        SPRAY: '🧴',
+        WATER: '💧',
+        FERTILIZER: '🌱',
+        PF: '🦠',
+        PRUNING: '✂️',
+        BAGGING: '🛍️',
+        HARVEST: '🍇',
+        HUMIDITY: '🌬️',
+        GENERAL: '📋'
+      };
+      
+      // 52주 작업 데이터 수집
+      const weeklyTasks = {};
+      for (let w = 1; w <= 52; w++) {
+        weeklyTasks[w] = [];
+        const weekData = WEEKLY_DATA[w];
+        if (!weekData) continue;
+        
+        // 작업 목록에서 유형 분류
+        if (weekData.tasks) {
+          weekData.tasks.forEach(task => {
+            const taskType = WeeklyScheduler.classifyTask(task);
+            if (filterType === 'ALL' || taskType === filterType) {
+              weeklyTasks[w].push({ type: taskType, text: task });
+            }
+          });
+        }
+        
+        // 관수 (매주)
+        if (weekData.water && (filterType === 'ALL' || filterType === 'WATER')) {
+          weeklyTasks[w].push({ type: 'WATER', text: '관수' });
+        }
+        
+        // 시비
+        if (weekData.fertilizer && (filterType === 'ALL' || filterType === 'FERTILIZER')) {
+          weeklyTasks[w].push({ type: 'FERTILIZER', text: weekData.fertilizer.type });
+        }
+        
+        // PF농법 (특정 주차)
+        const pfWeeks = [1, 2, 4, 6, 9, 11, 13, 15, 17, 18, 20, 22, 24];
+        if (pfWeeks.includes(w) && (filterType === 'ALL' || filterType === 'PF')) {
+          weeklyTasks[w].push({ type: 'PF', text: 'PF농법' });
+        }
+        
+        // 약제살포 (짝수 주)
+        if (w % 2 === 0 && weekData.pest && (filterType === 'ALL' || filterType === 'SPRAY')) {
+          weeklyTasks[w].push({ type: 'SPRAY', text: '약제살포' });
+        }
+        
+        // 습도관리 (매주)
+        if (filterType === 'ALL' || filterType === 'HUMIDITY') {
+          weeklyTasks[w].push({ type: 'HUMIDITY', text: '습도관리' });
+        }
+      }
+      
+      // 그리드 렌더링 (4행 x 13열 = 52주)
+      let html = '';
+      
+      // 헤더 행
+      html += '<div class="task-yearly-cell header">주차</div>';
+      for (let c = 1; c <= 12; c++) {
+        html += `<div class="task-yearly-cell header">${c}열</div>`;
+      }
+      
+      // 4행 (각 행 13주)
+      for (let row = 0; row < 4; row++) {
+        // 행 레이블
+        const startWeek = row * 13 + 1;
+        const endWeek = Math.min((row + 1) * 13, 52);
+        html += `<div class="task-yearly-cell week-label">${startWeek}~${endWeek}주</div>`;
+        
+        // 각 셀
+        for (let col = 0; col < 12; col++) {
+          const weekNo = row * 13 + col + 1;
+          if (weekNo > 52) {
+            html += '<div class="task-yearly-cell"></div>';
+            continue;
+          }
+          
+          const tasks = weeklyTasks[weekNo] || [];
+          const isCurrent = weekNo === currentWeekNo;
+          const isDeleted = tasks.every(t => isTaskPermanentlyDeleted(weekNo, t.type + '_0'));
+          
+          if (tasks.length > 0 && !isDeleted) {
+            // 가장 우선순위 높은 작업 타입
+            const primaryType = tasks[0].type;
+            const icon = taskIcons[primaryType] || '📋';
+            html += `
+              <div class="task-yearly-cell has-task ${primaryType} ${isCurrent ? 'current' : ''}" 
+                   title="${weekNo}주차: ${tasks.map(t => t.text).join(', ')}"
+                   onclick="scrollToWeek(${weekNo})">
+                <span class="task-icon">${icon}</span>
+                <span class="task-count">${weekNo}주 (${tasks.length})</span>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="task-yearly-cell ${isCurrent ? 'current' : ''}" 
+                   title="${weekNo}주차"
+                   onclick="scrollToWeek(${weekNo})">
+                <span style="color:#475569; font-size:7px;">${weekNo}</span>
+              </div>
+            `;
+          }
+        }
+      }
+      
+      // 범례
+      html += `
+        <div style="grid-column: 1 / -1; margin-top: 10px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 9px; color: #94a3b8;">
+          <strong>범례:</strong>
+          <span style="margin-left:10px;">🧪GA</span>
+          <span style="margin-left:8px;">🧴살포</span>
+          <span style="margin-left:8px;">💧관수</span>
+          <span style="margin-left:8px;">🌱시비</span>
+          <span style="margin-left:8px;">🦠PF</span>
+          <span style="margin-left:8px;">✂️전정</span>
+          <span style="margin-left:8px;">🛍️봉지</span>
+          <span style="margin-left:8px;">🍇수확</span>
+          <span style="margin-left:8px;">🌬️습도</span>
+          <span style="margin-left:15px; color:#22c55e;">■ 현재주차</span>
+        </div>
+      `;
+      
+      container.innerHTML = html;
+    }
+    
+    function scrollToWeek(weekNo) {
+      // 주차 목록에서 해당 주차로 스크롤
+      const weekItems = document.querySelectorAll('.week-item');
+      if (weekItems[weekNo - 1]) {
+        weekItems[weekNo - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        weekItems[weekNo - 1].classList.add('highlight');
+        setTimeout(() => weekItems[weekNo - 1].classList.remove('highlight'), 2000);
+      }
+    }
+    
+    // =============================================
+    // 52주 전체 작업 배치표
+    // =============================================
+    
+    let allWeeksScheduleOpen = false;
+    
+    function toggleAllWeeksSchedule() {
+      const panel = document.getElementById('allWeeksSchedule');
+      const content = document.getElementById('allWeeksContent');
+      allWeeksScheduleOpen = !allWeeksScheduleOpen;
+      
+      if (allWeeksScheduleOpen) {
+        panel.classList.add('open');
+        content.style.display = 'block';
+        renderAllWeeksSchedule();
+      } else {
+        panel.classList.remove('open');
+        content.style.display = 'none';
+      }
+    }
+    
+    function renderAllWeeksSchedule() {
+      const container = document.getElementById('allWeeksContent');
+      const { WEEKLY_DATA } = window.ShineExpert;
+      
+      let html = '';
+      
+      for (let weekNo = 1; weekNo <= 52; weekNo++) {
+        const weekData = WEEKLY_DATA[weekNo];
+        if (!weekData) continue;
+        
+        const climate = WeeklyScheduler.getHistoricalClimate(weekNo);
+        const isCurrent = weekNo === currentWeekNo;
+        
+        // 작업 분류 및 배치
+        const tasks = weekData.tasks || [];
+        const classifiedTasks = tasks.map(t => ({
+          text: t,
+          type: WeeklyScheduler.classifyTask(t),
+          conditions: WeeklyScheduler.TASK_CONDITIONS[WeeklyScheduler.classifyTask(t)] || WeeklyScheduler.TASK_CONDITIONS.GENERAL
+        }));
+        
+        // 날씨 민감/무관 분류
+        const weatherSensitiveTasks = classifiedTasks.filter(t => t.conditions.weatherSensitive !== false);
+        const weatherIndependentTasks = classifiedTasks.filter(t => t.conditions.weatherSensitive === false);
+        
+        // 작업 배치
+        const tasksByDay = distributeTasksToWeekFull(weatherSensitiveTasks, weatherIndependentTasks, climate, weekNo, weekData);
+        
+        // 사용자가 이동한 작업 적용
+        applyTaskMoveOverrides(tasksByDay, weekNo);
+        
+        html += `
+          <div class="week-schedule-card ${isCurrent ? 'current' : ''}" id="weekSchedule${weekNo}">
+            <div class="week-schedule-header" onclick="toggleWeekSchedule(${weekNo})">
+              <span class="week-schedule-icon">${weekData.phaseEmoji}</span>
+              <span class="week-schedule-title">${weekNo}주차 - ${weekData.phase}</span>
+              <span class="week-schedule-dates">${weekData.dateRange}</span>
+              <div class="week-schedule-climate">
+                <span>🌡️${climate.minTemp}~${climate.maxTemp}°C</span>
+                <span>💧${climate.rainChance}%</span>
+              </div>
+              <span class="week-schedule-toggle">▼</span>
+            </div>
+            <div class="week-schedule-content">
+              <div style="margin-bottom:8px; padding:8px; background:#1e293b; border-radius:6px;">
+                <div style="font-size:10px; color:#a855f7; font-weight:600;">🎯 ${weekData.goal}</div>
+                <div style="font-size:9px; color:#fca5a5; margin-top:4px;">⚠️ ${weekData.keyAlert}</div>
+              </div>
+              
+              <!-- 7일 캘린더 (현재 주 스케줄러와 동일 형태) -->
+              <div class="week-full-calendar">
+                ${renderWeekFullCalendar(weekNo, weekData, climate, tasksByDay)}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+      
+      // 현재 주차 자동 열기
+      if (currentWeekNo >= 1 && currentWeekNo <= 52) {
+        const currentCard = document.getElementById(`weekSchedule${currentWeekNo}`);
+        if (currentCard) {
+          currentCard.classList.add('open');
+          setTimeout(() => {
+            currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+      }
+    }
+    
+    // 전체 7일 캘린더 렌더링 (현재 주 스케줄러와 동일)
+    function renderWeekFullCalendar(weekNo, weekData, climate, tasksByDay) {
+      const DAYS_FULL = ['일', '월', '화', '수', '목', '금', '토'];
+      let html = '<div class="week-scheduler-calendar">';
+      
+      // 요일별 기후 변동 함수
+      const tempVariations = [-1, 1, 2, 0, -1, 1, 0];
+      const humVariations = [2, -2, -3, 0, 1, -1, 2];
+      
+      // 주차 시작일 계산 (열가둠 시작일 기준)
+      const heatStartDate = new Date($('heatStart').value);
+      const weekStartDate = new Date(heatStartDate);
+      weekStartDate.setDate(heatStartDate.getDate() + (weekNo - 1) * 7);
+      
+      // 온도에 따른 색상 (영하=파랑, 영상=빨강)
+      const getTempColorFull = (temp) => {
+        if (temp <= -10) return '#1e3a8a';
+        if (temp <= -5) return '#1d4ed8';
+        if (temp <= 0) return '#3b82f6';
+        if (temp <= 5) return '#f87171';
+        if (temp <= 10) return '#ef4444';
+        if (temp <= 15) return '#dc2626';
+        if (temp <= 20) return '#b91c1c';
+        if (temp <= 28) return '#991b1b';
+        if (temp <= 33) return '#7f1d1d';
+        return '#450a0a';
+      };
+      
+      for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+        const isBlocked = dayIdx === 0 || dayIdx === 3; // 일요일, 수요일
+        const dayTasks = (tasksByDay[dayIdx] || []).sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
+        
+        // 해당 요일의 날짜 계산
+        const dayDate = new Date(weekStartDate);
+        dayDate.setDate(dayDate.getDate() + dayIdx);
+        const dayDateStr = `${dayDate.getMonth() + 1}/${dayDate.getDate()}`;
+        
+        // 시간별 기후 - 일출~일몰 6등분 + 요일별 변동
+        const tempVar = tempVariations[dayIdx] || 0;
+        const humVar = humVariations[dayIdx] || 0;
+        
+        // 일출/일몰 시간 (월별)
+        const sunTimes = WeeklyScheduler.getSunTimes(dayDate);
+        const sunriseHour = Math.ceil(sunTimes.rise);
+        const sunsetHour = Math.floor(sunTimes.set);
+        
+        // 일출~일몰을 6등분하여 6개 시간대 생성
+        const hours = [];
+        const dayLength = sunsetHour - sunriseHour;
+        const interval = dayLength / 5; // 6개 포인트 = 5개 간격
+        for (let i = 0; i < 6; i++) {
+          hours.push(Math.round(sunriseHour + interval * i));
+        }
+        
+        const hourlyData = hours.map(hr => {
+          const base = climate.hourly.find(h => h.hour === hr) || climate.hourly.find(h => Math.abs(h.hour - hr) <= 1) || climate.hourly[Math.floor((hr - 6) / 3)];
+          return {
+            hour: hr,
+            temp: (base?.temp || 0) + tempVar,
+            humidity: Math.max(0, Math.min(100, (base?.humidity || 0) + humVar))
+          };
+        });
+        const h12 = hourlyData.find(h => h.hour === 12) || hourlyData[Math.floor(hourlyData.length / 2)];
+        
+        html += `
+          <div class="wsc-day ${isBlocked ? 'blocked' : ''}" 
+               ondragover="handleDragOver(event)" 
+               ondragleave="handleDragLeave(event)" 
+               ondrop="handleDrop(event, ${dayIdx}, ${weekNo})">
+            <div class="wsc-header">
+              <div class="wsc-dayname">${DAYS_FULL[dayIdx]}</div>
+              <div class="wsc-date" style="font-size:10px; color:#fef08a; margin-top:-2px;">${dayDateStr}</div>
+              ${!isBlocked ? `
+                <span class="wsc-badge">5년평균</span>
+                <div class="wsc-hourly-scroll">
+                  ${hourlyData.map(h => `
+                    <div class="wsc-hourly-item">
+                      <span class="wsc-h-time">${h.hour}시</span>
+                      <span class="wsc-h-temp" style="color:${getTempColorFull(h.temp)}">${h.temp}°</span>
+                      <span class="wsc-h-hum">💧${h.humidity}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : '<div class="wsc-blocked-label">🚫 휴무</div>'}
+            </div>
+            ${!isBlocked ? `
+              <div class="wsc-tasks">
+                ${dayTasks.length === 0 ? '<div class="wsc-no-task">작업 없음<div class="drag-hint">드래그하여 이동</div></div>' :
+                  dayTasks.map((t, idx) => {
+                    const taskId = t.type + '_' + idx;
+                    // 영구 삭제된 작업은 표시하지 않음
+                    if (isTaskPermanentlyDeleted(weekNo, taskId)) return '';
+                    const taskState = getTaskState(weekNo, dayIdx, taskId);
+                    const statusClass = taskState.status === 'completed' ? 'completed' : (taskState.status === 'deleted' ? 'deleted' : '');
+                    const taskTextEscaped = (t.text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    return `
+                    <div class="wsc-task ${t.isWater ? 'water' : (t.isFertilizer ? 'fertilizer' : (t.isSpray ? 'spray' : (t.isPF ? 'pf' : (t.isHumidity ? 'humidity' : (t.conditions.weatherSensitive !== false ? 'ws' : 'wi')))))} ${statusClass}" 
+                         draggable="true"
+                         ondragstart="handleDragStart(event, '${taskId}', '${taskTextEscaped}', ${dayIdx}, ${weekNo})"
+                         ondragend="handleDragEnd(event)"
+                         ${t.detail ? `onclick="toggleTaskDetail(this)"` : ''}>
+                      <div class="wsc-task-time">⏰ ${t.startHour}:00~${t.endHour}:00</div>
+                      <div class="wsc-task-name">${t.text}${t.detail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
+                      <div class="wsc-task-cond" style="color:${t.isWater ? '#38bdf8' : t.isFertilizer ? '#22c55e' : t.isSpray ? '#f59e0b' : t.isPF ? '#8b5cf6' : t.isHumidity ? '#06b6d4' : t.conditions.weatherSensitive !== false ? '#fbbf24' : '#64748b'}">
+                        ${t.isWater ? '💧 관수 작업' : t.isFertilizer ? '🧪 시비 작업' : t.isSpray ? '🧴 약제 살포' : t.isPF ? '🦠 PF농법' : t.isHumidity ? '🌬️ 환기/습도' : t.conditions.weatherSensitive !== false ? '🌡️' + (hourlyData.find(h => h.hour === 12)?.temp || '-') + '°C 💧' + (hourlyData.find(h => h.hour === 12)?.humidity || '-') + '%' : '📦 날씨무관'}
+                      </div>
+                      ${t.detail ? `<div class="wsc-task-detail">${t.detail.replace(/\\n/g, '<br>')}</div>` : ''}
+                      <div class="task-actions">
+                        ${taskState.status === 'deleted' ? `
+                          <button class="task-action-btn restore" onclick="restoreTask(${weekNo}, ${dayIdx}, '${taskId}', '${taskTextEscaped}', event)">🔄 복원</button>
+                          <button class="task-action-btn permanent-delete" onclick="permanentDeleteTask(${weekNo}, ${dayIdx}, '${taskId}', '${taskTextEscaped}', event)">❌ 완전삭제</button>
+                        ` : `
+                          <button class="task-action-btn complete" onclick="completeTask(${weekNo}, ${dayIdx}, '${taskId}', '${taskTextEscaped}', event)">${taskState.status === 'completed' ? '↩️ 취소' : '✅ 완료'}</button>
+                          <button class="task-action-btn delete" onclick="deleteTask(${weekNo}, ${dayIdx}, '${taskId}', '${taskTextEscaped}', event)">🗑️ 삭제</button>
+                        `}
+                      </div>
+                    </div>
+                  `}).join('')
+                }
+                <div class="drag-hint">드래그하여 이동</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+      
+      html += '</div>';
+      return html;
+    }
+    
+    // 전체 7일에 작업 분배 (시간 포함)
+    function distributeTasksToWeekFull(weatherSensitiveTasks, weatherIndependentTasks, climate, weekNo, weekData) {
+      const tasksByDay = {};
+      const WORK_DAYS = [1, 2, 4, 5, 6]; // 월,화,목,금,토
+      
+      // 시비 작업 먼저 확인 (관주시비 여부 파악)
+      let fertigationDays = []; // 관주시비가 있는 날
+      let fertigationWaterAmount = 0; // 관주시비에 사용되는 물량
+      if (weekData && weekData.fertilizer) {
+        const fert = weekData.fertilizer;
+        const fertType = fert.type || '시비';
+        const isFertigation = fertType.includes('관주');
+        
+        let fertDays = [1, 5];
+        if (fertType.includes('엽면') || fert.foliar) {
+          fertDays = [2, 4, 6];
+        }
+        
+        if (isFertigation) {
+          fertigationDays = fertDays;
+          // 관주시비 물량: 일일 관수량의 약 40%
+          const waterAmount = weekData.water?.amountTon || '3~5톤';
+          const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+          if (match) {
+            fertigationWaterAmount = parseFloat(match[1]) * 0.4;
+          }
+        }
+      }
+      
+      // 관수 작업 추가 (주간 계획 기반) - 물빠짐 적절함
+      if (weekData && weekData.water) {
+        const waterInterval = weekData.water.interval || '';
+        const waterMethod = weekData.water.method || '';
+        const waterAmount = weekData.water.amountTon || '';
+        
+        // 일일 총 관수량 파싱
+        let dailyWaterTotal = 3;
+        const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+        if (match) {
+          dailyWaterTotal = parseFloat(match[1]);
+        }
+        
+        let waterDays = [2, 5];
+        if (waterInterval.includes('2~3일') || waterInterval.includes('2일')) {
+          waterDays = [1, 4, 6];
+        } else if (waterInterval.includes('3~4일') || waterInterval.includes('3일')) {
+          waterDays = [2, 5];
+        } else if (waterInterval.includes('5~7일') || waterInterval.includes('7일')) {
+          waterDays = [4];
+        }
+        
+        let waterHour = 9;
+        if (waterMethod.includes('오후') || waterMethod.includes('저녁')) {
+          waterHour = 16;
+        } else if (waterMethod.includes('이른 아침') || waterMethod.includes('6')) {
+          waterHour = 7;
+        }
+        
+        waterDays.forEach(day => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          
+          // 관주시비가 있는 날은 관수량 조정 (일일총량 - 관주시비물량)
+          const isFertigationDay = fertigationDays.includes(day);
+          let adjustedAmount = dailyWaterTotal;
+          let waterNote = '';
+          
+          if (isFertigationDay && fertigationWaterAmount > 0) {
+            adjustedAmount = Math.max(0, dailyWaterTotal - fertigationWaterAmount);
+            waterNote = ` (관주${fertigationWaterAmount.toFixed(1)}톤 제외)`;
+          }
+          
+          if (adjustedAmount > 0) {
+            tasksByDay[day].unshift({
+              text: `💧 관수 (${adjustedAmount.toFixed(1)}톤)${waterNote}`,
+              type: 'WATER',
+              isWater: true,
+              isFertigationDay: isFertigationDay,
+              conditions: { weatherSensitive: true, duration: 1 },
+              startHour: waterHour,
+              endHour: waterHour + 1
+            });
+          }
+        });
+      }
+      
+      // 시비 작업 추가 (주간 계획 기반)
+      if (weekData && weekData.fertilizer) {
+        const fert = weekData.fertilizer;
+        const fertType = fert.type || '시비';
+        const fertMain = fert.main || '';
+        const fertSub = fert.sub || '';
+        const fertFoliar = fert.foliar || '';
+        const fertEc = fert.ec || '';
+        const fertPoint = fert.point || '';
+        const fertNpk = fert.npk || '';
+        const isFertigation = fertType.includes('관주');
+        const waterAmount = weekData.water?.amountTon || '';
+        
+        let fertDays = [1, 5];
+        if (fertType.includes('엽면') || fertFoliar) {
+          fertDays = [2, 4, 6];
+        }
+        
+        const fertHour = 10;
+        
+        // 관주시비 물량: 일일 관수량의 40%
+        let fertigationWater = 0;
+        let dailyTotal = 0;
+        if (isFertigation && waterAmount) {
+          const match = waterAmount.match(/(\d+(?:\.\d+)?)/);
+          if (match) {
+            dailyTotal = parseFloat(match[1]);
+            fertigationWater = dailyTotal * 0.4;
+          }
+        }
+        
+        const fertDetail = [
+          fertMain ? `📌 ${fertMain}` : '',
+          fertSub ? `➕ ${fertSub}` : '',
+          fertFoliar ? `🍃 엽면: ${fertFoliar}` : '',
+          fertEc ? `⚡ EC: ${fertEc}` : '',
+          fertPoint ? `✓ ${fertPoint}` : '',
+          fertNpk ? fertNpk : '',
+          isFertigation ? `💧 관주시비 물량: ${fertigationWater.toFixed(1)}톤 (40%)` : '',
+          isFertigation ? `💧 추가 관수: ${(dailyTotal - fertigationWater).toFixed(1)}톤 (60%)` : '',
+          isFertigation ? `📊 일일 총량: ${dailyTotal}톤 (100%)` : ''
+        ].filter(x => x).join('\\n');
+        
+        fertDays.forEach((day, idx) => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          tasksByDay[day].push({
+            text: isFertigation ? `🧪💧 관주시비 (${fertigationWater.toFixed(1)}톤)` : `🧪 ${fertType} (${fertMain.substring(0, 10)}${fertMain.length > 10 ? '...' : ''})`,
+            type: 'FERTILIZER',
+            isFertilizer: true,
+            isFertigation: isFertigation,
+            detail: fertDetail,
+            conditions: { weatherSensitive: true, duration: 1 },
+            startHour: fertHour + idx,
+            endHour: fertHour + idx + 1
+          });
+        });
+      }
+      
+      let dayIndex = 0;
+      let hourOffset = 0;
+      
+      // 날씨 민감 작업 배치
+      weatherSensitiveTasks.forEach(task => {
+        const targetDay = WORK_DAYS[dayIndex % WORK_DAYS.length];
+        if (!tasksByDay[targetDay]) tasksByDay[targetDay] = [];
+        
+        const startHour = 9 + (hourOffset * 2);
+        const duration = task.conditions.duration || 2;
+        
+        tasksByDay[targetDay].push({
+          ...task,
+          startHour: startHour,
+          endHour: startHour + duration
+        });
+        
+        hourOffset++;
+        if (hourOffset >= 3) {
+          hourOffset = 0;
+          dayIndex++;
+        }
+      });
+      
+      // 날씨 무관 작업 배치
+      weatherIndependentTasks.forEach(task => {
+        const targetDay = WORK_DAYS[dayIndex % WORK_DAYS.length];
+        if (!tasksByDay[targetDay]) tasksByDay[targetDay] = [];
+        
+        const startHour = 9 + (hourOffset * 2);
+        const duration = task.conditions.duration || 2;
+        
+        tasksByDay[targetDay].push({
+          ...task,
+          startHour: startHour,
+          endHour: startHour + duration
+        });
+        
+        hourOffset++;
+        if (hourOffset >= 3) {
+          hourOffset = 0;
+          dayIndex++;
+        }
+      });
+      
+      // PF농법 작업 추가
+      const PF_SCHEDULE_FULL = {
+        1: { timing: '발아 45일전', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        2: { timing: '발아 30일전', pf: 'PF-2', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        4: { timing: '발아 15일전', pf: 'PF-4', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        6: { timing: '발아', pf: 'PF-4', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        9: { timing: '개화 15일전', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        11: { timing: '개화', pf: 'PF-2', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        13: { timing: '개화 15일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        15: { timing: '개화 30일후', pf: 'PF-1', pfAmount: '500g', kit: 'PF-kit', kitAmount: '1kg' },
+        17: { timing: '개화 45일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        18: { timing: '개화 50일후', pf: 'PF-2', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        20: { timing: '개화 65일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        22: { timing: '개화 80일후', pf: 'PF-2', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' },
+        24: { timing: '개화 95일후', pf: 'PF-4', pfAmount: '250g', kit: 'PF-kit', kitAmount: '500g' }
+      };
+      
+      if (PF_SCHEDULE_FULL[weekNo]) {
+        const pf = PF_SCHEDULE_FULL[weekNo];
+        const pfDay = 4;
+        const pfHour = 14;
+        
+        const pfDetail = [
+          `📅 시기: ${pf.timing}`,
+          `🦠 ${pf.pf}: ${pf.pfAmount}`,
+          `📦 ${pf.kit}: ${pf.kitAmount}`,
+          ``,
+          `📋 사용 방법:`,
+          `  • ${pf.pf}와 ${pf.kit} 혼합 사용`,
+          `  • 물 200L당 희석`,
+          `  • 토양 관주 또는 엽면 살포`,
+          ``,
+          `💡 PF농법 효과:`,
+          `  • 토양 미생물 활성화`,
+          `  • 뿌리 발달 촉진`,
+          `  • 병해 저항성 강화`,
+          `  • 당도 및 품질 향상`
+        ].join('\\n');
+        
+        if (!tasksByDay[pfDay]) tasksByDay[pfDay] = [];
+        tasksByDay[pfDay].push({
+          text: `🦠 PF농법 (${pf.pf} ${pf.pfAmount})`,
+          type: 'PF',
+          isPF: true,
+          detail: pfDetail,
+          conditions: { weatherSensitive: true, duration: 1 },
+          startHour: pfHour,
+          endHour: pfHour + 1
+        });
+      }
+      
+      // 약제 살포 작업 추가 (2주에 1회, 짝수 주차에 배치)
+      if (weekData && weekData.pest && weekNo % 2 === 0) {
+        const pest = weekData.pest;
+        const sprayDrug = pest.spray || '예방 약제';
+        const watchList = pest.watch?.join(', ') || '-';
+        const riskLevel = pest.risk || 'LOW';
+        const condition = pest.condition || '-';
+        const prevention = pest.prevention || '-';
+        
+        const sprayDay = 2;
+        const sprayHour = 10;
+        
+        const sprayDetail = [
+          `🎯 주의 병해충: ${watchList}`,
+          `⚠️ 위험도: ${riskLevel}`,
+          `🌡️ 발생 조건: ${condition}`,
+          `🛡️ 예방: ${prevention}`,
+          `💊 권장 약제: ${sprayDrug}`,
+          ``,
+          `📋 살포 조건:`,
+          `  • 온도: 15~28°C`,
+          `  • 습도: 50~70%`,
+          `  • 시간: 이슬 마른 후 (오전 9~11시)`,
+          `  • 바람: 약한 바람 (3m/s 이하)`,
+          ``,
+          `📦 희석 배율 (일반 기준):`,
+          `  • 살균제: 1,000~2,000배`,
+          `  • 살충제: 1,000~1,500배`,
+          `  • 진딧물: 2,000배`,
+          `  • 응애류: 1,500배`
+        ].join('\\n');
+        
+        if (!tasksByDay[sprayDay]) tasksByDay[sprayDay] = [];
+        tasksByDay[sprayDay].push({
+          text: `🧴 약제살포 (${sprayDrug.substring(0, 8)}${sprayDrug.length > 8 ? '...' : ''})`,
+          type: 'SPRAY',
+          isSpray: true,
+          detail: sprayDetail,
+          conditions: { weatherSensitive: true, duration: 2 },
+          startHour: sprayHour,
+          endHour: sprayHour + 2
+        });
+      }
+      
+      // 습도관리 작업 추가 (연동하우스 기준)
+      const HUMIDITY_PHASES_FULL = {
+        dormant: { weeks: [1,2,3,4], name: '휴면기', humidity: '60-70%', mode: '최소환기', note: '동해방지' },
+        budding: { weeks: [5,6,7,8], name: '발아기', humidity: '70-80%', mode: '결로방지', note: '새벽환기 필수' },
+        shooting: { weeks: [9,10,11,12,13,14], name: '신초생장기', humidity: '60-70%', mode: '적극환기', note: '웃자람 방지' },
+        flowering: { weeks: [15,16,17], name: '개화기', humidity: '50-60%', mode: '필수환기', note: '화진 방지!' },
+        fruitGrowth: { weeks: [18,19,20,21,22,23,24], name: '과립비대기', humidity: '60-70%', mode: '열과방지', note: '급변 주의' },
+        coloring: { weeks: [25,26,27,28,29,30], name: '착색기', humidity: '50-60%', mode: '당도향상', note: '저습도 유지' },
+        harvest: { weeks: [31,32,33,34,35,36], name: '수확기', humidity: '50-60%', mode: '품질유지', note: '결로 방지' },
+        postHarvest: { weeks: [37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52], name: '수확후', humidity: '60-70%', mode: '최소환기', note: '월동 준비' }
+      };
+      
+      let humidityInfoFull = null;
+      for (const [phase, info] of Object.entries(HUMIDITY_PHASES_FULL)) {
+        if (info.weeks.includes(weekNo)) {
+          humidityInfoFull = info;
+          break;
+        }
+      }
+      
+      if (humidityInfoFull) {
+        const humidityDetailFull = [
+          `📊 생육단계: ${humidityInfoFull.name}`,
+          `💧 적정습도: ${humidityInfoFull.humidity}`,
+          `🌬️ 환기모드: ${humidityInfoFull.mode}`,
+          `⚠️ 주의: ${humidityInfoFull.note}`,
+          ``,
+          `📋 시간대별 환기 (연동하우스):`,
+          `  06-08시 | 15°C↑,80%↑ → 환기팬,측창10%`,
+          `  09-11시 | 20°C↑,70%↑ → 측창30%,천창개방`,
+          `  12-15시 | 25°C↑ → 측창50%,환기팬`,
+          `  16-18시 | 20°C↓ → 측창20%,천창폐쇄`,
+          `  야간 | 85%↑ → 환기팬 간헐가동`,
+          ``,
+          `🚨 즉시조치: 80%↑→즉시환기, 결로→일출30분전`
+        ].join('\\n');
+        
+        [1, 4].forEach(day => {
+          if (!tasksByDay[day]) tasksByDay[day] = [];
+          tasksByDay[day].push({
+            text: `🌬️ 습도관리 (${humidityInfoFull.humidity})`,
+            type: 'HUMIDITY',
+            isHumidity: true,
+            detail: humidityDetailFull,
+            conditions: { weatherSensitive: true, duration: 1 },
+            startHour: 9,
+            endHour: 10
+          });
+        });
+      }
+      
+      return tasksByDay;
+    }
+    
+    function toggleWeekSchedule(weekNo) {
+      const card = document.getElementById(`weekSchedule${weekNo}`);
+      if (card) {
+        card.classList.toggle('open');
+      }
+    }
+    
+    // 작업을 요일별로 분배
+    function distributeTasksToWeek(weatherSensitiveTasks, weatherIndependentTasks, climate) {
+      const tasksByDay = {};
+      const DAY_INDICES = [1, 2, 4, 5, 6]; // 월,화,목,금,토
+      
+      let dayIndex = 0;
+      
+      // 날씨 민감 작업: 최적 조건 요일에 배치
+      weatherSensitiveTasks.forEach(task => {
+        // 간단한 배치: 순차적으로 분배
+        const targetDay = DAY_INDICES[dayIndex % DAY_INDICES.length];
+        if (!tasksByDay[targetDay]) tasksByDay[targetDay] = [];
+        tasksByDay[targetDay].push(task);
+        dayIndex++;
+      });
+      
+      // 날씨 무관 작업: 남은 요일에 배치
+      weatherIndependentTasks.forEach(task => {
+        const targetDay = DAY_INDICES[dayIndex % DAY_INDICES.length];
+        if (!tasksByDay[targetDay]) tasksByDay[targetDay] = [];
+        tasksByDay[targetDay].push(task);
+        dayIndex++;
+      });
+      
+      return tasksByDay;
+    }
+    
+    // 요일별 기후 정보 (12시 기준)
+    function getDayClimateInfo(climate, dayIdx) {
+      const noon = climate.hourly.find(h => h.hour === 12) || climate.hourly[6];
+      return {
+        temp: noon ? noon.temp : climate.avgTemp,
+        humidity: noon ? noon.humidity : 60
+      };
+    }
+    
     document.addEventListener('DOMContentLoaded', () => {
       init();
       setTimeout(openCurrentWeek, 100);
       loadWeather(); // 날씨 로드
+      
+      // 스케줄러 초기화
+      initEventDatePicker();
+      loadCustomTasks(); // 사용자 작업 로드
+      setTimeout(loadScheduler, 500); // 날씨 로드 후 스케줄러 로드
     });
   </script>
 </body>
