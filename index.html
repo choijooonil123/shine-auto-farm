@@ -1301,8 +1301,11 @@
   <!-- Header -->
   <div class="header">
     <h1>🍇 샤인 주차별 전문가</h1>
+    <span style="color:#fef08a; font-size:11px; margin-right:2px;">열가둠:</span>
     <input type="date" id="heatStart" value="2025-01-19" title="열가둠 시작일">
-    <input type="date" id="targetDate" title="분석일">
+    <span style="color:#fef08a; font-size:11px; margin-left:8px; margin-right:2px;">오늘:</span>
+    <span id="todayDateDisplay" style="color:#e2e8f0; font-size:12px; font-weight:600; margin-right:8px;"></span>
+    <input type="date" id="targetDate" title="분석일" style="display:none;">
     <div class="stat">남은 주 <b id="dWeek">-</b></div>
     <div class="stat">남은 일 <b id="dDays">-</b></div>
     <div class="stat phase-stat"><b id="dPhase">-</b></div>
@@ -1579,7 +1582,12 @@
     
     function init() {
       const t = new Date();
-      $('targetDate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+      const todayStr = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+      $('targetDate').value = todayStr;
+      
+      // 오늘 날짜 표시 (MM/DD 형식)
+      const todayDisplay = `${t.getMonth()+1}/${t.getDate()}`;
+      $('todayDateDisplay').textContent = todayDisplay;
       
       ['heatStart', 'targetDate'].forEach(id => {
         $(id).addEventListener('change', run);
@@ -3128,16 +3136,14 @@
         const hours = [];
         const dayLength = sunsetHour - sunriseHour;
         const interval = dayLength / 5;
-        for (let i = 0; i < 6; i++) {
-          hours.push(Math.round(sunriseHour + interval * i));
+        for (let j = 0; j < 6; j++) {
+          hours.push(Math.round(sunriseHour + interval * j));
         }
         
         // 오늘부터 며칠 후인지 계산
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const targetDate = new Date(date);
-        targetDate.setHours(0, 0, 0, 0);
-        const daysDiff = Math.floor((targetDate - today) / (1000 * 60 * 60 * 24));
+        const currentDate = new Date(date);
+        currentDate.setHours(0, 0, 0, 0);
+        const daysDiff = Math.floor((currentDate - today) / (1000 * 60 * 60 * 24));
         
         // 오늘, 내일, 모레(0, 1, 2일 후)까지는 실시간, 그 이후는 5년 평균
         const useRealtime = daysDiff >= 0 && daysDiff <= 2 && realtimeWeather && realtimeWeather.hourly;
