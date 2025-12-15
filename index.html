@@ -1581,6 +1581,72 @@
     const $ = id => document.getElementById(id);
     let currentWeekNo = 1;
     
+    // 최초 실행 확인 및 바탕화면 바로가기 안내
+    function checkFirstRun() {
+      const isFirstRun = !localStorage.getItem('shineMuscat_installed');
+      
+      if (isFirstRun) {
+        // 최초 실행 플래그 설정
+        localStorage.setItem('shineMuscat_installed', 'true');
+        localStorage.setItem('shineMuscat_installDate', new Date().toISOString());
+        
+        // 바탕화면 바로가기 생성 안내 모달 표시
+        showInstallGuide();
+      }
+    }
+    
+    function showInstallGuide() {
+      const modal = document.createElement('div');
+      modal.id = 'installGuideModal';
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+      `;
+      modal.innerHTML = `
+        <div style="background: linear-gradient(135deg, #1e1b4b, #312e81); border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+          <h2 style="color: #a78bfa; margin: 0 0 16px 0; font-size: 18px;">🍇 샤인머스캣 전문가 시스템</h2>
+          <p style="color: #e2e8f0; font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+            환영합니다! 처음 실행하셨네요.<br><br>
+            <b style="color: #fbbf24;">바탕화면에 바로가기를 만드시겠습니까?</b>
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <p style="color: #94a3b8; font-size: 11px; margin: 0 0 8px 0;">📌 바로가기 생성 방법:</p>
+            <ol style="color: #cbd5e1; font-size: 11px; margin: 0; padding-left: 20px; line-height: 1.8;">
+              <li>프로그램 폴더에서 <b style="color:#22c55e;">install.bat</b> 실행</li>
+              <li>또는 브라우저 메뉴 → "바로가기 만들기"</li>
+            </ol>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button onclick="openInstallFolder()" style="flex:1; background: #22c55e; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600;">
+              📁 폴더 열기
+            </button>
+            <button onclick="closeInstallGuide()" style="flex:1; background: #475569; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 12px;">
+              나중에 하기
+            </button>
+          </div>
+          <p style="color: #64748b; font-size: 9px; text-align: center; margin: 12px 0 0 0;">
+            이 안내는 최초 1회만 표시됩니다
+          </p>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    function closeInstallGuide() {
+      const modal = document.getElementById('installGuideModal');
+      if (modal) modal.remove();
+    }
+    
+    function openInstallFolder() {
+      // 현재 페이지 경로에서 폴더 경로 추출
+      const currentPath = window.location.pathname;
+      const folderPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+      
+      alert('프로그램 폴더를 열어 install.bat을 실행해주세요.\n\n경로: ' + decodeURIComponent(folderPath || window.location.href));
+      closeInstallGuide();
+    }
+    
     function init() {
       const t = new Date();
       const todayStr = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
@@ -1594,6 +1660,9 @@
         $(id).addEventListener('change', run);
         $(id).addEventListener('input', run);
       });
+      
+      // 최초 실행 시 바탕화면 바로가기 생성 안내
+      checkFirstRun();
       
       renderWeekList();
       run();
