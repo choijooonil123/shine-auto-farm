@@ -3227,13 +3227,44 @@
       container.innerHTML = html;
       
       // 배치 불가 작업 표시
-      const unscheduledTasks = result.scheduledTasks.filter(t => t.date === null);
+      // 제외 항목: 완전삭제된 작업, 작업이 아닌 항목 (보온덮개, 살수, 연무 방제, 서리 피해 등)
+      const excludeKeywords = ['보온덮개', '보온덥개', '살수', '연무', '서리', '동해', '냉해', '결로', '피해', '위험', '주의'];
+      const unscheduledTasks = result.scheduledTasks.filter((t, idx) => {
+        if (t.date !== null) return false; // 배치된 작업은 제외
+        
+        // 작업 유형별 완전삭제 확인
+        const taskType = t.taskType || 'GENERAL';
+        const taskName = t.task || '';
+        
+        // 약제살포, 습도관리 완전삭제 확인
+        if (taskType === 'SPRAY' || taskName.includes('약제') || taskName.includes('살포')) {
+          // SPRAY 타입의 모든 완전삭제 확인
+          for (let i = 0; i < 10; i++) {
+            if (isTaskPermanentlyDeleted(currentWeekNo, 'SPRAY_' + i)) return false;
+          }
+        }
+        if (taskType === 'HUMIDITY' || taskName.includes('습도') || taskName.includes('환기')) {
+          // HUMIDITY 타입의 모든 완전삭제 확인
+          for (let i = 0; i < 10; i++) {
+            if (isTaskPermanentlyDeleted(currentWeekNo, 'HUMIDITY_' + i)) return false;
+          }
+        }
+        
+        // 일반 완전삭제 확인
+        const taskId = taskType + '_' + idx;
+        if (isTaskPermanentlyDeleted(currentWeekNo, taskId)) return false;
+        
+        // 작업이 아닌 항목 제외 (경고/권고사항)
+        if (excludeKeywords.some(kw => taskName.includes(kw))) return false;
+        
+        return true;
+      });
       const unscheduledSection = document.getElementById('unscheduledSection');
       const unscheduledContainer = document.getElementById('unscheduledTasks');
       
       if (unscheduledTasks.length > 0) {
         unscheduledSection.style.display = 'block';
-        unscheduledContainer.innerHTML = unscheduledTasks.map(t => `
+        unscheduledContainer.innerHTML = unscheduledTasks.map((t, idx) => `
           <div class="wsc-task" style="border-left-color:#ef4444; background:rgba(239,68,68,0.1);">
             <div class="wsc-task-name">${t.task}</div>
             <div class="wsc-task-cond" style="color:#ef4444;">${t.warning}</div>
