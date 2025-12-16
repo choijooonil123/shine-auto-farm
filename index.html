@@ -3266,8 +3266,13 @@
           return '#450a0a';
         };
         
+        const weekNo = result.weekNo || currentWeekNo || 1;
+        
         html += `
-          <div class="wsc-day ${isBlocked ? 'blocked' : ''} ${isToday ? 'today' : ''} ${hasAlert ? 'has-alert' : ''} ${hasSevereAlert ? 'has-severe-alert' : ''}">
+          <div class="wsc-day ${isBlocked ? 'blocked' : ''} ${isToday ? 'today' : ''} ${hasAlert ? 'has-alert' : ''} ${hasSevereAlert ? 'has-severe-alert' : ''}"
+               ondragover="handleDragOver(event)" 
+               ondragleave="handleDragLeave(event)" 
+               ondrop="handleDrop(event, ${dayIndex}, ${weekNo})">
             <div class="wsc-header">
               <div class="wsc-dayname">${WeeklyScheduler.DAYS_FULL[dayIndex]}</div>
               <div class="wsc-date" style="font-size:10px; color:#fef08a; margin-top:-2px;">${WeeklyScheduler.formatDate(date)}</div>
@@ -3287,7 +3292,7 @@
             </div>
             ${!isBlocked ? `
               <div class="wsc-tasks">
-                ${renderDayTasks(dayTasks)}
+                ${renderDayTasks(dayTasks, weekNo)}
               </div>
             ` : ''}
           </div>
@@ -3301,12 +3306,12 @@
       // if (unscheduledSection) unscheduledSection.style.display = 'none';
     }
     
-    function renderDayTasks(tasks) {
+    function renderDayTasks(tasks, weekNoParam) {
+      const weekNo = weekNoParam || currentWeekNo || 1;
+      
       if (tasks.length === 0) {
         return '<div class="wsc-no-task">작업 없음<div class="drag-hint">드래그하여 이동</div></div>';
       }
-      
-      const weekNo = currentWeekNo || 1;
       
       // 시작 시간 순으로 정렬
       const sortedTasks = [...tasks].sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
@@ -3347,7 +3352,11 @@
         else condText = '📦 날씨무관';
         
         return `
-        <div class="wsc-task ${typeClass} ${statusClass}" ${hasDetail ? 'onclick="toggleTaskDetail(this)"' : ''}>
+        <div class="wsc-task ${typeClass} ${statusClass}" 
+             draggable="true"
+             ondragstart="handleDragStart(event, '${taskId}', '${taskTextEscaped}', ${dayIndex}, ${weekNo})"
+             ondragend="handleDragEnd(event)"
+             ${hasDetail ? 'onclick="toggleTaskDetail(this)"' : ''}>
           <div class="wsc-task-time">⏰ ${t.startHour}:00~${t.endHour}:00</div>
           <div class="wsc-task-name">${t.task}${hasDetail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
           <div class="wsc-task-cond" style="color:${condColor}">
