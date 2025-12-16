@@ -3123,6 +3123,30 @@
       const container = document.getElementById('weekCalendar');
       const today = new Date();
       today.setHours(0,0,0,0);
+      const weekNo = result.weekNo || currentWeekNo || 1;
+      
+      // 작업을 요일별로 그룹화 (52주 스케줄러와 동일한 방식)
+      const tasksByDay = {};
+      result.scheduledTasks.forEach(t => {
+        const dayIdx = t.dayIndex !== undefined ? t.dayIndex : (t.date ? new Date(t.date).getDay() : null);
+        if (dayIdx !== null) {
+          if (!tasksByDay[dayIdx]) tasksByDay[dayIdx] = [];
+          tasksByDay[dayIdx].push({
+            ...t,
+            text: t.task || t.text,
+            type: t.taskType || 'GENERAL',
+            isWater: t.taskType === 'WATER',
+            isFertilizer: t.taskType === 'FERTILIZER',
+            isSpray: t.taskType === 'SPRAY',
+            isPF: t.taskType === 'PF',
+            isHumidity: t.taskType === 'HUMIDITY',
+            conditions: t.conditions || { weatherSensitive: t.weatherSensitive !== false, duration: 1 }
+          });
+        }
+      });
+      
+      // 작업 이동 오버라이드 적용 (52주 스케줄러와 동일)
+      applyTaskMoveOverrides(tasksByDay, weekNo);
       
       let html = '';
       const unscheduled = [];
@@ -3150,8 +3174,8 @@
           a.type === 'EXTREME_HEAT' || a.type === 'HEAVY_RAIN' || a.type === 'LOCALIZED_STORM'
         );
         
-        // 해당 날짜의 작업들
-        const dayTasks = result.scheduledTasks.filter(t => t.date === dateStr);
+        // 해당 날짜의 작업들 (이동 적용된 작업 사용)
+        const dayTasks = (tasksByDay[dayIndex] || []).sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
         
         // 시간별 온도/습도 요약 (오전/오후)
         let hourlyInfo = '';
@@ -3313,33 +3337,39 @@
         return '<div class="wsc-no-task">작업 없음<div class="drag-hint">드래그하여 이동</div></div>';
       }
       
-      // 시작 시간 순으로 정렬
+      // 시작 시간 순으로 정렬 (이미 정렬된 경우도 있으므로 복사 후 정렬)
       const sortedTasks = [...tasks].sort((a, b) => (a.startHour || 0) - (b.startHour || 0));
       
       let html = sortedTasks.map((t, idx) => {
-        const isWater = t.taskType === 'WATER';
-        const isFertilizer = t.taskType === 'FERTILIZER';
-        const isPF = t.taskType === 'PF';
-        const isSpray = t.taskType === 'SPRAY';
-        const isHumidity = t.taskType === 'HUMIDITY';
+        // 52주 스케줄러와 동일한 방식으로 작업 속성 접근
+        const isWater = t.isWater || t.taskType === 'WATER' || t.type === 'WATER';
+        const isFertilizer = t.isFertilizer || t.taskType === 'FERTILIZER' || t.type === 'FERTILIZER';
+        const isPF = t.isPF || t.taskType === 'PF' || t.type === 'PF';
+        const isSpray = t.isSpray || t.taskType === 'SPRAY' || t.type === 'SPRAY';
+        const isHumidity = t.isHumidity || t.taskType === 'HUMIDITY' || t.type === 'HUMIDITY';
         const hasDetail = t.detail && t.detail.length > 0;
         
-        // 작업 상태 확인
-        const taskId = (t.taskType || 'GENERAL') + '_' + idx;
-        const dayIndex = t.dayIndex !== undefined ? t.dayIndex : new Date(t.date).getDay();
+        // 작업 상태 확인 (52주 스케줄러와 동일한 taskId 형식: type + '_' + idx)
+        const taskType = t.type || t.taskType || 'GENERAL';
+        const taskId = taskType + '_' + idx;
+        const dayIndex = t.dayIndex !== undefined ? t.dayIndex : (t.date ? new Date(t.date).getDay() : 0);
         
         // 영구 삭제된 작업은 표시하지 않음
         if (isTaskPermanentlyDeleted(weekNo, taskId)) return '';
         
         const taskState = getTaskState(weekNo, dayIndex, taskId);
         const statusClass = taskState.status === 'completed' ? 'completed' : (taskState.status === 'deleted' ? 'deleted' : '');
-        const taskTextEscaped = (t.task || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const taskText = t.text || t.task || '';
+        const taskTextEscaped = taskText.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        // 날씨 민감 여부 (conditions 객체 또는 직접 속성 확인)
+        const isWeatherSensitive = t.conditions?.weatherSensitive !== false && t.weatherSensitive !== false;
         
         // 작업 유형별 클래스
-        const typeClass = isWater ? 'water' : isFertilizer ? 'fertilizer' : isSpray ? 'spray' : isPF ? 'pf' : isHumidity ? 'humidity' : (t.weatherSensitive !== false ? 'ws' : 'wi');
+        const typeClass = isWater ? 'water' : isFertilizer ? 'fertilizer' : isSpray ? 'spray' : isPF ? 'pf' : isHumidity ? 'humidity' : (isWeatherSensitive ? 'ws' : 'wi');
         
         // 작업 조건 색상
-        const condColor = isWater ? '#38bdf8' : isFertilizer ? '#22c55e' : isSpray ? '#f59e0b' : isPF ? '#8b5cf6' : isHumidity ? '#06b6d4' : (t.weatherSensitive !== false ? '#fbbf24' : '#64748b');
+        const condColor = isWater ? '#38bdf8' : isFertilizer ? '#22c55e' : isSpray ? '#f59e0b' : isPF ? '#8b5cf6' : isHumidity ? '#06b6d4' : (isWeatherSensitive ? '#fbbf24' : '#64748b');
         
         // 작업 조건 텍스트
         let condText = '';
@@ -3348,7 +3378,7 @@
         else if (isSpray) condText = '🧴 약제 살포';
         else if (isPF) condText = '🦠 PF농법';
         else if (isHumidity) condText = '🌬️ 환기/습도';
-        else if (t.weatherSensitive !== false && t.weather) condText = `🌡️${t.weather.temp}°C 💧${t.weather.humidity}%`;
+        else if (isWeatherSensitive && t.weather) condText = `🌡️${t.weather.temp}°C 💧${t.weather.humidity}%`;
         else condText = '📦 날씨무관';
         
         return `
@@ -3358,7 +3388,7 @@
              ondragend="handleDragEnd(event)"
              ${hasDetail ? 'onclick="toggleTaskDetail(this)"' : ''}>
           <div class="wsc-task-time">⏰ ${t.startHour}:00~${t.endHour}:00</div>
-          <div class="wsc-task-name">${t.task}${hasDetail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
+          <div class="wsc-task-name">${taskText}${hasDetail ? ' ▾' : ''}${t.carriedOver ? '<span class="task-carried-over">📌 이월</span>' : ''}</div>
           <div class="wsc-task-cond" style="color:${condColor}">
             ${condText}
           </div>
